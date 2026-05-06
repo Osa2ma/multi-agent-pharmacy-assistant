@@ -263,6 +263,20 @@ You should receive a JSON response with `status: "completed"`, a prose `response
 
 ---
 
+### 9. Connect the Streamlit UI (via Ngrok)
+
+If you are hosting the Streamlit frontend (`app.py`) on Streamlit Community Cloud while keeping the n8n backend running locally via Docker, the cloud app cannot securely reach `localhost`. You must expose your local n8n instance to the internet using [Ngrok](https://ngrok.com/).
+
+1. Download, install, and authenticate Ngrok on your local machine.
+2. Open a new terminal and start a tunnel to your n8n port:
+   ```bash
+   ngrok http 5678
+
+# Replace localhost with your active Ngrok URL
+WEBHOOK_URL = "[https://partly-overcast-lilly.ngrok-free.dev/webhook/pharmacy-query](https://partly-overcast-lilly.ngrok-free.dev/webhook/pharmacy-query)"
+
+---
+
 ## Safety Mechanisms
 
 The system uses eight overlapping layers of defense. None alone is sufficient; together they ensure that multiple things must fail for a harmful answer to reach a user.
