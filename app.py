@@ -8,7 +8,7 @@ import streamlit as st
 
 
 WEBHOOK_ENV_VAR = "WEBHOOK_URL"
-DEFAULT_WEBHOOK_URL = "http://localhost:5678/webhook/pharmacy-query"
+DEFAULT_WEBHOOK_URL = "https://partly-overcast-lilly.ngrok-free.dev/webhook/pharmacy-query"
 
 
 @dataclass
