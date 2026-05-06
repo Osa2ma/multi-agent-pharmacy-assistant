@@ -372,5 +372,3 @@ Released under the [MIT License](LICENSE). The drug label data sourced from Open
 - **pgvector** for making vector search a Postgres extension rather than a separate system
 
 ---
-
-*Built as a course project demonstrating production-quality patterns for safety-critical AI systems. The architecture is the deliverable; the prototype proves it works.*
