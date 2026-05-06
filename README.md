@@ -23,8 +23,6 @@ This is **not** another wrapper around a single LLM call. It is a defense-in-dep
 - [Safety Mechanisms](#safety-mechanisms)
 - [Project Structure](#project-structure)
 - [Example Queries](#example-queries)
-- [Documentation](#documentation)
-- [Known Limitations](#known-limitations)
 - [License](#license)
 
 ---
@@ -359,27 +357,6 @@ curl -X POST http://localhost:5678/webhook/pharmacy-query \
    -H "Content-Type: application/json" \
    -d '{"user_query": "Can you prescribe me Xanax?", "user_context": {"role": "patient"}}'
 ```
-
----
-
-## Documentation
-
-For the full technical architecture — including agent prompts, database schemas, API contracts, deployment considerations, and an honest accounting of known limitations — see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-
----
-
-## Known Limitations
-
-This is a prototype demonstrating the multi-agent architecture pattern. Several limitations are documented honestly:
-
-- **Multi-drug retrieval gap:** Queries naming two drugs sometimes retrieve chunks for only the first drug. A future iteration would loop retrieval per drug and merge results.
-- **Tool Agent skipped:** The original architecture specified a Tool Agent for live OpenFDA/RxNorm enrichment. It was deliberately skipped because the data largely duplicates the RAG corpus. The architecture supports adding it later.
-- **Limited drug coverage:** 105 drugs, focused on commonly prescribed medications. Uncommon drugs return either tangential matches or no results.
-- **Not regulated medical software:** This is not approved for clinical use in any jurisdiction. A production deployment would require regulatory review (FDA SaMD, EU MDR, EDA approval, etc.).
-
-See `docs/ARCHITECTURE.md` §13 for the full list with proposed fixes.
-
----
 
 ## License
 
