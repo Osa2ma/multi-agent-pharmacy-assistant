@@ -1,0 +1,26 @@
+{
+  "drug_query": "azithromycin",
+  "generic_names": [
+    "AZITHROMYCIN"
+  ],
+  "brand_names": [
+    "Azithromycin"
+  ],
+  "manufacturer_names": [
+    "Preferred Pharmaceuticals Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "248656"
+  ],
+  "spl_id": "6efa1622-de6a-4eee-b5bb-6a8149bbe1c1",
+  "spl_set_id": "003307c5-3f73-4a5d-a704-bfdea3c656e8",
+  "effective_time": "20260316",
+  "fetched_at": "2026-05-02T20:49:42.660754Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

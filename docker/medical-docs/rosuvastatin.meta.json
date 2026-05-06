@@ -1,0 +1,29 @@
+{
+  "drug_query": "rosuvastatin",
+  "generic_names": [
+    "ROSUVASTATIN CALCIUM"
+  ],
+  "brand_names": [
+    "Rosuvastatin Calcium"
+  ],
+  "manufacturer_names": [
+    "Westminster Pharmaceuticals, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "859419",
+    "859424",
+    "859747",
+    "859751"
+  ],
+  "spl_id": "447c034b-bd46-2a37-e063-6394a90a4feb",
+  "spl_set_id": "02797697-300a-43db-92cf-9b78f08626be",
+  "effective_time": "20251126",
+  "fetched_at": "2026-05-02T20:49:09.596961Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

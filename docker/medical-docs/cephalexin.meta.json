@@ -1,0 +1,26 @@
+{
+  "drug_query": "cephalexin",
+  "generic_names": [
+    "CEPHALEXIN"
+  ],
+  "brand_names": [
+    "Cephalexin"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "309114"
+  ],
+  "spl_id": "fc0f8e56-f656-4ae6-9c83-c7bc4046b42f",
+  "spl_set_id": "02b5cd6f-3df8-43c1-879d-217fcf55231a",
+  "effective_time": "20250211",
+  "fetched_at": "2026-05-02T20:49:51.841002Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

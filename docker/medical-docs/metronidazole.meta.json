@@ -1,0 +1,26 @@
+{
+  "drug_query": "metronidazole",
+  "generic_names": [
+    "METRONIDAZOLE"
+  ],
+  "brand_names": [
+    "Metronidazole"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "314106"
+  ],
+  "spl_id": "29651ae0-6297-4821-9b15-9d7753e1a3b8",
+  "spl_set_id": "02046a22-a5eb-4bb7-bec7-e5a2aa55e142",
+  "effective_time": "20260318",
+  "fetched_at": "2026-05-02T20:49:56.829121Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,78 @@
+{
+  "openfda": {
+    "brand_name": [
+      "Tri-Vite Drops with Fluoride"
+    ],
+    "generic_name": [
+      "ASCORBIC ACID, SODIUM FLUORIDE, VITAMIN A AND VITAMIN D"
+    ],
+    "manufacturer_name": [
+      "Method Pharmaceuticals, LLC"
+    ],
+    "product_ndc": [
+      "58657-323"
+    ],
+    "product_type": [
+      "HUMAN PRESCRIPTION DRUG"
+    ],
+    "route": [
+      "ORAL"
+    ],
+    "substance_name": [
+      "ASCORBIC ACID",
+      "SODIUM FLUORIDE",
+      "VITAMIN A",
+      "VITAMIN D"
+    ],
+    "rxcui": [
+      "1365980"
+    ],
+    "spl_id": [
+      "41b76910-3e17-3254-e063-6294a90adb54"
+    ],
+    "spl_set_id": [
+      "003181d4-5412-4ffe-b99d-880f2010e3ad"
+    ],
+    "package_ndc": [
+      "58657-323-50"
+    ],
+    "is_original_packager": [
+      true
+    ],
+    "nui": [
+      "N0000193618",
+      "M0001797",
+      "M0022788",
+      "N0000175950"
+    ],
+    "pharm_class_epc": [
+      "Vitamin C [EPC]",
+      "Vitamin A [EPC]"
+    ],
+    "pharm_class_cs": [
+      "Ascorbic Acid [CS]",
+      "Vitamin A [CS]"
+    ],
+    "unii": [
+      "PQ6CK8PD0R",
+      "8ZYQ1474W7",
+      "81G40H8B0T",
+      "9VU1KI44GP"
+    ]
+  },
+  "indications_and_usage": [
+    "INDICATIONS AND USAGE Supplementation of the diet with vitamins A, C and D. Tri-Vite Drops with Fluoride 0.25 mg also provides fluoride for caries prophylaxis. The American Academy of Pediatrics recommends that children up to age 16, in areas where drinking water contains less than optimal levels of fluoride, receive daily fluoride supplementation. The American Academy of Pediatrics recommend that infants and young children 6 months to 3 years of age, in areas where the drinking water contains less than 0.3 ppm of fluoride, and children 3-6 years of age, in areas where the drinking water contains 0.3 through 0.6 ppm of fluoride, receive 0.25 mg of supplemental fluoride daily which is provided in a dose of 1 mL of Tri-Vite Drops with Fluoride 0.25 mg (See Dosage and Administration ). Tri-Vite Drops with Fluoride 0.25 mg supply significant amounts of vitamins A, C and D to supplement the diet, and to help assure that nutritional deficiencies of these vitamins will not develop. Thus, in a single easy-to-use preparation, children obtain essential vitamins and fluoride."
+  ],
+  "dosage_and_administration": [
+    "DOSAGE AND ADMINISTRATION 1.0 mL daily or as directed by physician. May be dropped directly into the mouth with dropper; or mixed with cereal, fruit juice or other food. Tri-Vite Drops with Fluoride 0.25 mg is available in 50 mL bottles with accompanying calibrated dropper."
+  ],
+  "warnings": [
+    "WARNINGS As in the case of all medications, keep out of reach of children."
+  ],
+  "adverse_reactions": [
+    "ADVERSE REACTIONS Allergic rash and other idiosyncrasies have been rarely reported."
+  ],
+  "clinical_pharmacology": [
+    "CLINICAL PHARMACOLOGY It is well established that fluoridation of the water supply (1 ppm fluoride) during the period of tooth development leads to a significant decrease in the incidence of dental caries. Hydroxyapatite is the principal crystal for all calcified tissue in the human body. The fluoride ion reacts with hydroxyapatite in the tooth as it is formed to produce the more caries-resistant crystal, fluorapatite. The reaction may be expressed by the equation: Three stages of fluoride deposition in tooth enamel can be distinguished: 1. Small amounts (reflecting the low levels of fluoride in tissue fluids) are incorporated into the enamel crystals while they are being formed. 2. After enamel has been laid down, fluoride deposition continues in the surface enamel. Diffusion of fluoride from the surface inward is apparently restricted. 3. After eruption, the surface enamel acquires fluoride from water, food, supplementary fluoride and smaller amounts from saliva. eq"
+  ]
+}

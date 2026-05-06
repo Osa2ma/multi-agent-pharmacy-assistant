@@ -1,0 +1,29 @@
+{
+  "drug_query": "olanzapine",
+  "generic_names": [
+    "OLANZAPINE"
+  ],
+  "brand_names": [
+    "Olanzapine"
+  ],
+  "manufacturer_names": [
+    "Lannett Company, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "312076",
+    "314155",
+    "351107",
+    "351108"
+  ],
+  "spl_id": "002da62b-aec3-8e2a-e063-6294a90a5efc",
+  "spl_set_id": "002dd00f-7946-ea4f-e063-6294a90a5916",
+  "effective_time": "20230710",
+  "fetched_at": "2026-05-02T20:51:25.070332Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

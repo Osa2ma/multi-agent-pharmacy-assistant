@@ -1,0 +1,27 @@
+{
+  "drug_query": "prednisolone",
+  "generic_names": [
+    "PREDNISOLONE ACETATE"
+  ],
+  "brand_names": [
+    "PRED FORTE"
+  ],
+  "manufacturer_names": [
+    "Allergan, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "OPHTHALMIC"
+  ],
+  "rxcui": [
+    "1376336",
+    "1548724"
+  ],
+  "spl_id": "bff1726c-7781-49de-8a61-bc37a755c92b",
+  "spl_set_id": "00a5aa88-e361-4ea7-8922-530c738b726e",
+  "effective_time": "20240202",
+  "fetched_at": "2026-05-02T20:51:51.176893Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

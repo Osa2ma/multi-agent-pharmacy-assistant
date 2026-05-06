@@ -1,0 +1,26 @@
+{
+  "drug_query": "clarithromycin",
+  "generic_names": [
+    "CLARITHROMYCIN"
+  ],
+  "brand_names": [
+    "Clarithromycin"
+  ],
+  "manufacturer_names": [
+    "PD-Rx Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197517"
+  ],
+  "spl_id": "41392bb7-d916-446c-e063-6294a90a2c5c",
+  "spl_set_id": "0be243c6-de02-45dd-8210-cab1bbc8dfa7",
+  "effective_time": "20251015",
+  "fetched_at": "2026-05-02T20:49:44.333776Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

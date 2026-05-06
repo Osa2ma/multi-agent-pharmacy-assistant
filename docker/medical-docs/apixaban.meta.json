@@ -1,0 +1,27 @@
+{
+  "drug_query": "apixaban",
+  "generic_names": [
+    "APIXABAN"
+  ],
+  "brand_names": [
+    "apixaban"
+  ],
+  "manufacturer_names": [
+    "Indoco Remedies Limited"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1364435",
+    "1364445"
+  ],
+  "spl_id": "6a6e421b-6ed3-403c-b07d-09dbbd6a487c",
+  "spl_set_id": "095a08ac-cf0e-497e-a682-ddef38d6b29c",
+  "effective_time": "20210615",
+  "fetched_at": "2026-05-02T20:49:19.831255Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

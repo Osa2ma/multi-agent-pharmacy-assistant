@@ -1,0 +1,27 @@
+{
+  "drug_query": "meloxicam",
+  "generic_names": [
+    "MELOXICAM"
+  ],
+  "brand_names": [
+    "Meloxicam"
+  ],
+  "manufacturer_names": [
+    "Lupin Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "152695",
+    "311486"
+  ],
+  "spl_id": "ea7f4d30-9a36-44fa-bc78-f8e64ae91651",
+  "spl_set_id": "06a401f0-4380-4081-86ed-a309a25abf6b",
+  "effective_time": "20240808",
+  "fetched_at": "2026-05-02T20:49:30.781976Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

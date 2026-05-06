@@ -1,0 +1,26 @@
+{
+  "drug_query": "tamsulosin",
+  "generic_names": [
+    "TAMSULOSIN HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "tamsulosin hydrochloride"
+  ],
+  "manufacturer_names": [
+    "XLCare Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "863669"
+  ],
+  "spl_id": "9f4e621f-46a0-4d70-81cf-b6eb560383ca",
+  "spl_set_id": "00097e78-9c04-4e62-8260-ddb50e9a6a93",
+  "effective_time": "20260101",
+  "fetched_at": "2026-05-02T20:51:57.634204Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

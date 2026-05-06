@@ -1,0 +1,26 @@
+{
+  "drug_query": "montelukast",
+  "generic_names": [
+    "MONTELUKAST SODIUM"
+  ],
+  "brand_names": [
+    "montelukast sodium"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "311759"
+  ],
+  "spl_id": "c678afd8-0ddd-40a3-936e-594c126a275d",
+  "spl_set_id": "04b3faff-1ea1-4d2a-aa31-9d6e742e1759",
+  "effective_time": "20260305",
+  "fetched_at": "2026-05-02T20:50:44.062659Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

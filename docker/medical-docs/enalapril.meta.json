@@ -1,0 +1,26 @@
+{
+  "drug_query": "enalapril",
+  "generic_names": [
+    "ENALAPRIL MALEATE"
+  ],
+  "brand_names": [
+    "Enalapril Maleate"
+  ],
+  "manufacturer_names": [
+    "Golden State Medical Supply, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "858817"
+  ],
+  "spl_id": "074fb8a1-3ea1-0d6b-e063-6394a90aaf60",
+  "spl_set_id": "074fe718-88d8-365c-e063-6394a90a299d",
+  "effective_time": "20231009",
+  "fetched_at": "2026-05-02T20:48:42.661579Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,28 @@
+{
+  "drug_query": "losartan",
+  "generic_names": [
+    "LOSARTAN POTASSIUM"
+  ],
+  "brand_names": [
+    "Losartan Potassium"
+  ],
+  "manufacturer_names": [
+    "Cardinal Health 107, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "979480",
+    "979485",
+    "979492"
+  ],
+  "spl_id": "016461a7-40a7-4ebc-9342-66ea16cdb6fc",
+  "spl_set_id": "021cd76a-b093-4704-8410-5e7d01e20a54",
+  "effective_time": "20251022",
+  "fetched_at": "2026-05-02T20:48:44.504053Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

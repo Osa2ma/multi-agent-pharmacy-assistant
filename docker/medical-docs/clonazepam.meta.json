@@ -1,0 +1,26 @@
+{
+  "drug_query": "clonazepam",
+  "generic_names": [
+    "CLONAZEPAM"
+  ],
+  "brand_names": [
+    "Clonazepam"
+  ],
+  "manufacturer_names": [
+    "REMEDYREPACK INC."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197527"
+  ],
+  "spl_id": "4d2345d3-593a-fb2f-e063-6394a90a713f",
+  "spl_set_id": "00f323c0-e007-40df-ae7f-e6b3c7ba0aa8",
+  "effective_time": "20260316",
+  "fetched_at": "2026-05-02T20:51:14.510805Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

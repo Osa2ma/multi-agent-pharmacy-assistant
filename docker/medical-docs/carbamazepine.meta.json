@@ -1,0 +1,26 @@
+{
+  "drug_query": "carbamazepine",
+  "generic_names": [
+    "CARBAMAZEPINE"
+  ],
+  "brand_names": [
+    "Carbamazepine"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "308979"
+  ],
+  "spl_id": "a420fd55-7029-4cc4-b63e-12fdcb76e6fe",
+  "spl_set_id": "047bc284-060a-4db9-bf37-75d10f95a0a6",
+  "effective_time": "20250218",
+  "fetched_at": "2026-05-02T20:51:38.100376Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

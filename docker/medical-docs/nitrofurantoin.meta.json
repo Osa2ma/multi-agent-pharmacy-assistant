@@ -1,0 +1,26 @@
+{
+  "drug_query": "nitrofurantoin",
+  "generic_names": [
+    "NITROFURANTOIN"
+  ],
+  "brand_names": [
+    "Nitrofurantoin"
+  ],
+  "manufacturer_names": [
+    "NorthStar Rx LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "311989"
+  ],
+  "spl_id": "14c9efac-c0b1-7afe-e063-6294a90a39e4",
+  "spl_set_id": "04af8b73-7e15-7da8-e063-6294a90af284",
+  "effective_time": "20240329",
+  "fetched_at": "2026-05-02T20:50:01.841949Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

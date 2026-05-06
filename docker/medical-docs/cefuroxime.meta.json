@@ -1,0 +1,27 @@
+{
+  "drug_query": "cefuroxime",
+  "generic_names": [
+    "CEFUROXIME AND DEXTROSE"
+  ],
+  "brand_names": [
+    "Cefuroxime and Dextrose"
+  ],
+  "manufacturer_names": [
+    "B. Braun Medical Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "INTRAVENOUS"
+  ],
+  "rxcui": [
+    "1665444",
+    "1665449"
+  ],
+  "spl_id": "6874a295-7ec7-4822-9d04-4dd9932b4546",
+  "spl_set_id": "07170ee3-1a24-424f-a2a2-00bc92e98f85",
+  "effective_time": "20201205",
+  "fetched_at": "2026-05-02T20:49:53.512512Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

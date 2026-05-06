@@ -1,0 +1,26 @@
+{
+  "drug_query": "vitamin d",
+  "generic_names": [
+    "ASCORBIC ACID, SODIUM FLUORIDE, VITAMIN A AND VITAMIN D"
+  ],
+  "brand_names": [
+    "Tri-Vite Drops with Fluoride"
+  ],
+  "manufacturer_names": [
+    "Method Pharmaceuticals, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1365980"
+  ],
+  "spl_id": "41b76910-3e17-3254-e063-6294a90adb54",
+  "spl_set_id": "003181d4-5412-4ffe-b99d-880f2010e3ad",
+  "effective_time": "20251021",
+  "fetched_at": "2026-05-02T20:52:02.606744Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

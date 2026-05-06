@@ -1,0 +1,26 @@
+{
+  "drug_query": "fluticasone",
+  "generic_names": [
+    "FLUTICASONE PROPIONATE NASAL"
+  ],
+  "brand_names": [
+    "Fluticasone Propionate"
+  ],
+  "manufacturer_names": [
+    "Advagen Pharma Ltd."
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "NASAL"
+  ],
+  "rxcui": [
+    "1797907"
+  ],
+  "spl_id": "49fdba31-142a-2157-e063-6294a90a01f3",
+  "spl_set_id": "0107ad1c-1d8e-434c-a91f-dd2caf4fa5e5",
+  "effective_time": "20260204",
+  "fetched_at": "2026-05-02T20:50:41.200036Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

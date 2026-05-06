@@ -1,0 +1,27 @@
+{
+  "drug_query": "alendronate",
+  "generic_names": [
+    "ALENDRONATE SODIUM"
+  ],
+  "brand_names": [
+    "Binosto"
+  ],
+  "manufacturer_names": [
+    "Radius Health, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1248077",
+    "1248083"
+  ],
+  "spl_id": "1ff6288a-ab6b-4443-81bd-fd1a37a2bd16",
+  "spl_set_id": "09765234-01bc-40f7-b9bb-c167056f3909",
+  "effective_time": "20260206",
+  "fetched_at": "2026-05-02T20:51:55.879145Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

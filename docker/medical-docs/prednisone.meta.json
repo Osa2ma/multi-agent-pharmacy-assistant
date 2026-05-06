@@ -1,0 +1,26 @@
+{
+  "drug_query": "prednisone",
+  "generic_names": [
+    "PREDNISONE"
+  ],
+  "brand_names": [
+    "PredniSONE"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "312617"
+  ],
+  "spl_id": "239dda37-8a86-41b6-bb36-7c888542cc75",
+  "spl_set_id": "0060b86b-0b79-4c54-a7be-97683a933a05",
+  "effective_time": "20230831",
+  "fetched_at": "2026-05-02T20:51:48.887155Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

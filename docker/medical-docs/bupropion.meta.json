@@ -1,0 +1,27 @@
+{
+  "drug_query": "bupropion",
+  "generic_names": [
+    "BUPROPION HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "buPropion Hydrochloride XL"
+  ],
+  "manufacturer_names": [
+    "Oryza pharmaceuticals Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "993541",
+    "993557"
+  ],
+  "spl_id": "47afeb95-a677-8969-e063-6294a90a7b2d",
+  "spl_set_id": "004d8121-59d4-46c4-acb8-b2dd097bf556",
+  "effective_time": "20251125",
+  "fetched_at": "2026-05-02T20:51:06.221071Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

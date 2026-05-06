@@ -1,0 +1,26 @@
+{
+  "drug_query": "erythromycin",
+  "generic_names": [
+    "ERYTHROMYCIN"
+  ],
+  "brand_names": [
+    "erythromycin"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "TOPICAL"
+  ],
+  "rxcui": [
+    "318202"
+  ],
+  "spl_id": "4ddb7356-308f-4c0a-bda1-7c49fb7efe29",
+  "spl_set_id": "00c4f27e-59e2-4173-99b1-59dd295e83de",
+  "effective_time": "20241011",
+  "fetched_at": "2026-05-02T20:49:45.705715Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

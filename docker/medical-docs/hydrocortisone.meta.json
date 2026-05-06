@@ -1,0 +1,26 @@
+{
+  "drug_query": "hydrocortisone",
+  "generic_names": [
+    "HYDROCORTISONE"
+  ],
+  "brand_names": [
+    "anti itch"
+  ],
+  "manufacturer_names": [
+    "Meijer, Inc."
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "TOPICAL"
+  ],
+  "rxcui": [
+    "106258"
+  ],
+  "spl_id": "a43439f4-6959-43c6-95a0-44fcdb62acea",
+  "spl_set_id": "00040bfe-001a-484e-bec0-e21e8b27f369",
+  "effective_time": "20240917",
+  "fetched_at": "2026-05-02T20:51:54.246083Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "atenolol",
+  "generic_names": [
+    "ATENOLOL"
+  ],
+  "brand_names": [
+    "Atenolol"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197379"
+  ],
+  "spl_id": "e2d819f9-b7db-4c40-9ce9-953d58aa371c",
+  "spl_set_id": "09b21985-1818-449d-9b29-98f733cf7b9f",
+  "effective_time": "20241126",
+  "fetched_at": "2026-05-02T20:48:56.707486Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

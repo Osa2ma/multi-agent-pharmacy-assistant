@@ -1,0 +1,28 @@
+{
+  "drug_query": "amlodipine",
+  "generic_names": [
+    "AMLODIPINE BESYLATE"
+  ],
+  "brand_names": [
+    "Amlodipine Besylate"
+  ],
+  "manufacturer_names": [
+    "Lupin Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197361",
+    "308135",
+    "308136"
+  ],
+  "spl_id": "cc27c9a5-dd2e-4a79-af00-28f51408362a",
+  "spl_set_id": "003dd1ec-16f8-4f96-b6a8-c4689d35892a",
+  "effective_time": "20260420",
+  "fetched_at": "2026-05-02T20:48:47.882775Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "loperamide",
+  "generic_names": [
+    "LOPERAMIDE HCL"
+  ],
+  "brand_names": [
+    "anti diarrheal"
+  ],
+  "manufacturer_names": [
+    "H E B"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1250685"
+  ],
+  "spl_id": "80acab10-ff9e-4353-8bf0-a9ea6138e047",
+  "spl_set_id": "01964f8a-f05c-4f72-9530-e0cffd981ffa",
+  "effective_time": "20250411",
+  "fetched_at": "2026-05-02T20:50:27.779923Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

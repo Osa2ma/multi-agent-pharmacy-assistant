@@ -1,0 +1,26 @@
+{
+  "drug_query": "clopidogrel",
+  "generic_names": [
+    "CLOPIDOGREL BISULFATE"
+  ],
+  "brand_names": [
+    "Clopidogrel"
+  ],
+  "manufacturer_names": [
+    "Aurobindo Pharma Limited"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "309362"
+  ],
+  "spl_id": "ff58c1f3-4875-4d10-aca7-c622af163cef",
+  "spl_set_id": "0078fb3d-3595-4ae1-a059-1d5e81c879cf",
+  "effective_time": "20240517",
+  "fetched_at": "2026-05-02T20:49:13.069993Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

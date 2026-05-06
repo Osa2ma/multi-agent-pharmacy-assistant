@@ -1,0 +1,67 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - NODES_EXCLUDE=[]
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_RESTRICT_FILE_ACCESS_TO=/data/docs
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=Africa/Cairo
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./medical-docs:/data/docs
+    networks:
+      - backend
+    restart: unless-stopped
+
+  pgvector:
+    image: pgvector/pgvector:pg16
+    container_name: pgvector
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=pharmacy
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=pharmacy_logs
+    volumes:
+      - pgvector_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: unless-stopped
+
+  pharmacy-ui:
+    image: python:3.11-slim
+    container_name: pharmacy-ui
+    working_dir: /app
+    command: >-
+      sh -c "pip install --no-cache-dir -r /app/requirements.txt &&
+      streamlit run /app/app.py"
+    ports:
+      - "8501:8501"
+    environment:
+      - WEBHOOK_URL=http://n8n:5678/webhook-test/pharmacy-query
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_PORT=8501
+    volumes:
+      - ../app.py:/app/app.py:ro
+      - ../requirements.txt:/app/requirements.txt:ro
+    networks:
+      - backend
+    depends_on:
+      - n8n
+    restart: unless-stopped
+
+networks:
+  backend:
+
+volumes:
+  n8n_data:
+  pgvector_data:

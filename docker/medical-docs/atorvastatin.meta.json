@@ -1,0 +1,26 @@
+{
+  "drug_query": "atorvastatin",
+  "generic_names": [
+    "ATORVASTATIN CALCIUM"
+  ],
+  "brand_names": [
+    "Atorvastatin calcium"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "259255"
+  ],
+  "spl_id": "05b0f170-ac97-4a83-b03a-659a4b493ee2",
+  "spl_set_id": "00afce9b-48c9-487a-a738-e359c005c707",
+  "effective_time": "20250828",
+  "fetched_at": "2026-05-02T20:49:07.537200Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

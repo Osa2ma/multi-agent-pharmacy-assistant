@@ -1,0 +1,26 @@
+{
+  "drug_query": "metoclopramide",
+  "generic_names": [
+    "METOCLOPRAMIDE"
+  ],
+  "brand_names": [
+    "Metoclopramide"
+  ],
+  "manufacturer_names": [
+    "American Health Packaging"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "104884"
+  ],
+  "spl_id": "328399bd-5afb-f961-e063-6294a90a7c0a",
+  "spl_set_id": "0034a97a-fb05-418a-a234-de278907cd2a",
+  "effective_time": "20250411",
+  "fetched_at": "2026-05-02T20:50:26.377981Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

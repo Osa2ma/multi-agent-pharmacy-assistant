@@ -1,0 +1,26 @@
+{
+  "drug_query": "albuterol",
+  "generic_names": [
+    "ALBUTEROL SULFATE"
+  ],
+  "brand_names": [
+    "Albuterol Sulfate HFA"
+  ],
+  "manufacturer_names": [
+    "Advanced Rx of Tennessee, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "RESPIRATORY (INHALATION)"
+  ],
+  "rxcui": [
+    "2123076"
+  ],
+  "spl_id": "2a996b2b-b5da-65e7-e063-6394a90adeed",
+  "spl_set_id": "04c8a345-0a0d-5a01-e063-6294a90a40d2",
+  "effective_time": "20241231",
+  "fetched_at": "2026-05-02T20:50:34.489491Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

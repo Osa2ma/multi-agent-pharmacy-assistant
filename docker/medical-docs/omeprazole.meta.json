@@ -1,0 +1,26 @@
+{
+  "drug_query": "omeprazole",
+  "generic_names": [
+    "OMEPRAZOLE"
+  ],
+  "brand_names": [
+    "Omeprazole"
+  ],
+  "manufacturer_names": [
+    "Chain Drug Marketing Association INC"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "402014"
+  ],
+  "spl_id": "bbbf9415-a533-1629-8f52-3f286fdc2d46",
+  "spl_set_id": "0057cb91-fc5e-8e9d-a926-299405c5c3a8",
+  "effective_time": "20241110",
+  "fetched_at": "2026-05-02T20:50:12.667823Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

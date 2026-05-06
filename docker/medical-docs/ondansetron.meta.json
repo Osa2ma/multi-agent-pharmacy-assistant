@@ -1,0 +1,26 @@
+{
+  "drug_query": "ondansetron",
+  "generic_names": [
+    "ONDANSETRON HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "ondansetron hydrochloride"
+  ],
+  "manufacturer_names": [
+    "NCS HealthCare of KY, LLC dba Vangard Labs"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198052"
+  ],
+  "spl_id": "cb0b89ea-904e-424e-9213-80fc4d073fe3",
+  "spl_set_id": "00327696-c496-4c83-a63e-9e29fd6246d4",
+  "effective_time": "20240424",
+  "fetched_at": "2026-05-02T20:50:29.447517Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

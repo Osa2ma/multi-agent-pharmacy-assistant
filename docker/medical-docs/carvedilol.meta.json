@@ -1,0 +1,26 @@
+{
+  "drug_query": "carvedilol",
+  "generic_names": [
+    "CARVEDILOL"
+  ],
+  "brand_names": [
+    "Carvedilol"
+  ],
+  "manufacturer_names": [
+    "QPharma Inc"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "686924"
+  ],
+  "spl_id": "45871b50-d2fc-68c5-e063-6394a90aa1e8",
+  "spl_set_id": "010290af-81f4-0037-e063-6394a90a4638",
+  "effective_time": "20251202",
+  "fetched_at": "2026-05-02T20:48:58.325146Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

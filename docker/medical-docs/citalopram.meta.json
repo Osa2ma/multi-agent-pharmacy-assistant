@@ -1,0 +1,26 @@
+{
+  "drug_query": "citalopram",
+  "generic_names": [
+    "CITALOPRAM HYDROBROMIDE"
+  ],
+  "brand_names": [
+    "Citalopram"
+  ],
+  "manufacturer_names": [
+    "REMEDYREPACK INC."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "309314"
+  ],
+  "spl_id": "3401590f-c858-2164-e063-6294a90a7ea1",
+  "spl_set_id": "0109f365-bebd-4810-a56f-4451e10245db",
+  "effective_time": "20250430",
+  "fetched_at": "2026-05-02T20:50:57.414591Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

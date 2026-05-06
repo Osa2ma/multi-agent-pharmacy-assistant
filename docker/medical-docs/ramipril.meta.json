@@ -1,0 +1,27 @@
+{
+  "drug_query": "ramipril",
+  "generic_names": [
+    "RAMIPRIL"
+  ],
+  "brand_names": [
+    "Ramipril"
+  ],
+  "manufacturer_names": [
+    "Proficient Rx LP"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198189",
+    "261962"
+  ],
+  "spl_id": "cada6f46-f67d-41d9-8dbe-53740c3dac62",
+  "spl_set_id": "01da05d8-e72e-4208-bf92-a5cd929f15ab",
+  "effective_time": "20220701",
+  "fetched_at": "2026-05-02T20:48:39.077363Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

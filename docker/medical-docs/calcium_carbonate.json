@@ -1,0 +1,59 @@
+{
+  "openfda": {
+    "application_number": [
+      "part331"
+    ],
+    "brand_name": [
+      "ANTACID"
+    ],
+    "generic_name": [
+      "CALCIUM CARBONATE"
+    ],
+    "manufacturer_name": [
+      "Advance Pharmaceutical Inc."
+    ],
+    "product_ndc": [
+      "17714-025"
+    ],
+    "product_type": [
+      "HUMAN OTC DRUG"
+    ],
+    "route": [
+      "ORAL"
+    ],
+    "substance_name": [
+      "CALCIUM CARBONATE"
+    ],
+    "rxcui": [
+      "577040"
+    ],
+    "spl_id": [
+      "60f41580-e08d-faad-e053-2a91aa0a9076"
+    ],
+    "spl_set_id": [
+      "0108b97f-02e9-4f86-9f33-cde4f919affd"
+    ],
+    "package_ndc": [
+      "17714-025-01",
+      "17714-025-10"
+    ],
+    "is_original_packager": [
+      true
+    ],
+    "upc": [
+      "0017714025014"
+    ],
+    "unii": [
+      "H0G9379FGK"
+    ]
+  },
+  "indications_and_usage": [
+    "Uses relieves acid indigestion heartburn sour stomach upset stomach associated with these symptoms"
+  ],
+  "dosage_and_administration": [
+    "Directions take one to four tablets daily. do not take more than 4 tablets in 24 hours do not use the maximum dosage for more than 2 weeks"
+  ],
+  "warnings": [
+    "Warnings Ask a doctor or pharmacist before use if you are taking a prescription drug. Antacids may interact with certain prescription drugs. Stop use and ask a doctor if symptoms last more than 2 weeks. If pregnant or breast-feeding, ask a health professional before use."
+  ]
+}

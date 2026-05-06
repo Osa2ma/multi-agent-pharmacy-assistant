@@ -1,0 +1,26 @@
+{
+  "drug_query": "spironolactone",
+  "generic_names": [
+    "SPIRONOLACTONE"
+  ],
+  "brand_names": [
+    "Spironolactone"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198222"
+  ],
+  "spl_id": "76b5d6ad-0b7b-4781-b990-5ba036cf5a67",
+  "spl_set_id": "08738ad4-1607-4d55-af71-6790477353bd",
+  "effective_time": "20251119",
+  "fetched_at": "2026-05-02T20:49:04.065337Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

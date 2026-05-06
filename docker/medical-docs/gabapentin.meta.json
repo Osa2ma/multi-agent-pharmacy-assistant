@@ -1,0 +1,26 @@
+{
+  "drug_query": "gabapentin",
+  "generic_names": [
+    "GABAPENTIN"
+  ],
+  "brand_names": [
+    "Gabapentin"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "310431"
+  ],
+  "spl_id": "6a6e1a33-d95c-4ab1-a9f9-1dada8330ca9",
+  "spl_set_id": "01b810b7-f4c8-4412-bbc5-b9220d8770d8",
+  "effective_time": "20240402",
+  "fetched_at": "2026-05-02T20:51:31.627540Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

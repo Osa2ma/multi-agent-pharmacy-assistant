@@ -1,0 +1,26 @@
+{
+  "drug_query": "levothyroxine",
+  "generic_names": [
+    "LEVOTHYROXINE SODIUM"
+  ],
+  "brand_names": [
+    "Levothyroxine sodium"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "966249"
+  ],
+  "spl_id": "f059a576-bb4b-441d-917e-4338bc3df403",
+  "spl_set_id": "008de8fd-150f-4022-8ccb-c8bfa94875c7",
+  "effective_time": "20260324",
+  "fetched_at": "2026-05-02T20:51:47.495157Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

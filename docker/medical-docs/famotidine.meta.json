@@ -1,0 +1,26 @@
+{
+  "drug_query": "famotidine",
+  "generic_names": [
+    "FAMOTIDINE"
+  ],
+  "brand_names": [
+    "Famotidine"
+  ],
+  "manufacturer_names": [
+    "PD-Rx Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "310273"
+  ],
+  "spl_id": "41c182b7-7b97-e23a-e063-6394a90ab53f",
+  "spl_set_id": "002875d2-8c30-2d2e-e063-6294a90ae01e",
+  "effective_time": "20251022",
+  "fetched_at": "2026-05-02T20:50:20.750774Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

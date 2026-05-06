@@ -1,0 +1,29 @@
+{
+  "drug_query": "captopril",
+  "generic_names": [
+    "CAPTOPRIL AND HYDROCHLOROTHIAZIDE"
+  ],
+  "brand_names": [
+    "CAPTOPRIL AND HYDROCHLOROTHIAZIDE"
+  ],
+  "manufacturer_names": [
+    "Rising Pharma Holdings, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197436",
+    "197437",
+    "197438",
+    "197439"
+  ],
+  "spl_id": "0ea90fd4-0da6-4ad2-ab83-6cfbe0ae515e",
+  "spl_set_id": "0ea90fd4-0da6-4ad2-ab83-6cfbe0ae515e",
+  "effective_time": "20230221",
+  "fetched_at": "2026-05-02T20:48:40.816175Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

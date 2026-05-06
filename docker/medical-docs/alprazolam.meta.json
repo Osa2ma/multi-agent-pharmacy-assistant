@@ -1,0 +1,26 @@
+{
+  "drug_query": "alprazolam",
+  "generic_names": [
+    "ALPRAZOLAM"
+  ],
+  "brand_names": [
+    "Alprazolam"
+  ],
+  "manufacturer_names": [
+    "NuCare Pharmaceuticals,Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "308047"
+  ],
+  "spl_id": "2ad46bf8-1d4d-2bc8-e063-6294a90a9ef0",
+  "spl_set_id": "02840ea6-e4a0-96a0-e063-6394a90a19ae",
+  "effective_time": "20250103",
+  "fetched_at": "2026-05-02T20:51:12.956732Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

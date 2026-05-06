@@ -1,0 +1,28 @@
+{
+  "drug_query": "codeine",
+  "generic_names": [
+    "CODEINE SULFATE"
+  ],
+  "brand_names": [
+    "Codeine sulfate"
+  ],
+  "manufacturer_names": [
+    "Hikma Pharmaceuticals USA Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "997170",
+    "997287",
+    "997296"
+  ],
+  "spl_id": "b04f74f8-d960-4b7a-988a-372d9a1e1406",
+  "spl_set_id": "010905f9-3bcb-4b50-9fe8-a3ad0010f14c",
+  "effective_time": "20251222",
+  "fetched_at": "2026-05-02T20:49:37.795368Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

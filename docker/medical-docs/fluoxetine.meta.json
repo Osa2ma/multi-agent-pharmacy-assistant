@@ -1,0 +1,28 @@
+{
+  "drug_query": "fluoxetine",
+  "generic_names": [
+    "FLUOXETINE HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Fluoxetine"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "310384",
+    "310385",
+    "313989"
+  ],
+  "spl_id": "b9d5a8f5-39f1-425d-93fa-8adf95867fdb",
+  "spl_set_id": "02283de9-6087-45f7-a9ce-3b082ce860de",
+  "effective_time": "20190201",
+  "fetched_at": "2026-05-02T20:50:59.264278Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

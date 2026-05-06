@@ -1,0 +1,26 @@
+{
+  "drug_query": "diphenhydramine",
+  "generic_names": [
+    "DIPHENHYDRAMINE HCL"
+  ],
+  "brand_names": [
+    "Childrens Allergy Relief"
+  ],
+  "manufacturer_names": [
+    "Best Choice"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1049906"
+  ],
+  "spl_id": "448524ca-2fda-44ab-b1f8-edf8db006713",
+  "spl_set_id": "0035e6a4-b3ef-4e0b-aa7f-7453dd065f4d",
+  "effective_time": "20250122",
+  "fetched_at": "2026-05-02T20:50:52.443538Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

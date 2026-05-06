@@ -1,0 +1,26 @@
+{
+  "drug_query": "celecoxib",
+  "generic_names": [
+    "CELECOXIB"
+  ],
+  "brand_names": [
+    "CELECOXIB"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "205323"
+  ],
+  "spl_id": "2bbd635f-76fa-4feb-9d3d-f84505d0e381",
+  "spl_set_id": "00e67d5e-df6f-4dfd-8c2d-a001c8a99af0",
+  "effective_time": "20230824",
+  "fetched_at": "2026-05-02T20:49:34.061327Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

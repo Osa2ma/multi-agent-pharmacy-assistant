@@ -1,0 +1,26 @@
+{
+  "drug_query": "venlafaxine",
+  "generic_names": [
+    "VENLAFAXINE"
+  ],
+  "brand_names": [
+    "Venlafaxine"
+  ],
+  "manufacturer_names": [
+    "NuCare Pharmaceuticals,Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "313584"
+  ],
+  "spl_id": "2d58848f-040e-c4bd-e063-6294a90a33e4",
+  "spl_set_id": "017a84aa-0e1f-f560-e063-6294a90a9069",
+  "effective_time": "20250204",
+  "fetched_at": "2026-05-02T20:51:02.697915Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

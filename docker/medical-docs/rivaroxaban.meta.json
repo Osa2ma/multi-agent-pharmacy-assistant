@@ -1,0 +1,38 @@
+{
+  "drug_query": "rivaroxaban",
+  "generic_names": [
+    "RIVAROXABAN"
+  ],
+  "brand_names": [
+    "Xarelto",
+    "XARELTO"
+  ],
+  "manufacturer_names": [
+    "Janssen Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1114198",
+    "1114202",
+    "1232082",
+    "1232084",
+    "1232086",
+    "1232088",
+    "1549682",
+    "1549683",
+    "2059015",
+    "2059017",
+    "2588062",
+    "2588066"
+  ],
+  "spl_id": "452610f0-5abb-448d-a1fc-9dd9be02bb66",
+  "spl_set_id": "10db92f9-2300-4a80-836b-673e1ae91610",
+  "effective_time": "20260116",
+  "fetched_at": "2026-05-02T20:49:18.108410Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

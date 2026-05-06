@@ -1,0 +1,255 @@
+{
+  "name": "Rag_Ingestion",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -736,
+        -48
+      ],
+      "id": "a8e4bbdb-a288-4cbc-a269-3371127c54bf",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/docs/*.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        -432,
+        -48
+      ],
+      "id": "71be8bcb-8914-4daf-addb-f44fbe703260",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst output = [];\n\nconst SECTIONS = [\n    'indications_and_usage',\n    'dosage_and_administration',\n    'dosage_forms_and_strengths',\n    'contraindications',\n    'warnings',\n    'warnings_and_cautions',\n    'boxed_warning',\n    'adverse_reactions',\n    'drug_interactions',\n    'use_in_specific_populations',\n    'pregnancy',\n    'nursing_mothers',\n    'pediatric_use',\n    'geriatric_use',\n    'overdosage',\n    'mechanism_of_action',\n    'patient_information'\n];\n\nconst MAX_CHUNK_CHARS = 1500;\nconst OVERLAP_CHARS = 150;\n\nfunction splitIntoChunks(text, maxLen, overlap) {\n    if (text.length <= maxLen) return [text];\n    const chunks = [];\n    let start = 0;\n    while (start < text.length) {\n        let end = Math.min(start + maxLen, text.length);\n        if (end < text.length) {\n            const lastPeriod = text.lastIndexOf('. ', end);\n            if (lastPeriod > start + maxLen / 2) {\n                end = lastPeriod + 1;\n            }\n        }\n        chunks.push(text.slice(start, end).trim());\n        if (end >= text.length) break;\n        start = end - overlap;\n    }\n    return chunks;\n}\n\n// =========================================================================\n// PASS 1: Read all files into a map keyed by base drug name\n// =========================================================================\n// We process all items first because for each drug we have TWO files\n// (e.g., amlodipine.json and amlodipine.meta.json) that need to be paired.\n\nconst drugFiles = {};   // { \"amlodipine\": { label: {...}, meta: {...} }, ... }\n\nfor (let i = 0; i < items.length; i++) {\n    const item = items[i];\n    const filename = \n        item.binary?.data?.fileName \n        || item.json?.fileName\n        || item.json?.data?.fileName\n        || '';\n    \n    if (!filename) continue;\n    if (filename.startsWith('_')) continue;  // skip _run_log.json\n    \n    // Determine base drug name and file type\n    let baseName, fileType;\n    if (filename.endsWith('.meta.json')) {\n        baseName = filename.replace('.meta.json', '');\n        fileType = 'meta';\n    } else if (filename.endsWith('.json')) {\n        baseName = filename.replace('.json', '');\n        fileType = 'label';\n    } else {\n        continue;\n    }\n    \n    // Read the file content\n    let parsed;\n    try {\n        const binaryData = await this.helpers.getBinaryDataBuffer(i, 'data');\n        const text = binaryData.toString('utf-8');\n        parsed = JSON.parse(text);\n    } catch (e) {\n        console.log(`Failed to parse ${filename}: ${e.message}`);\n        continue;\n    }\n    \n    // Initialize the entry if not present\n    if (!drugFiles[baseName]) {\n        drugFiles[baseName] = { label: null, meta: null };\n    }\n    drugFiles[baseName][fileType] = parsed;\n}\n\n// =========================================================================\n// PASS 2: For each drug, build chunks using BOTH label content and metadata\n// =========================================================================\n\nfor (const [baseName, files] of Object.entries(drugFiles)) {\n    if (!files.label) {\n        console.log(`No label file for ${baseName}, skipping`);\n        continue;\n    }\n    \n    const label = files.label;\n    const meta = files.meta || {};\n    const openfda = label.openfda || {};\n    \n    // Prefer meta file's drug_query as canonical name (it's clean: \"amlodipine\")\n    // Fall back to filename if meta is missing\n    const drugName = (meta.drug_query || baseName.replace(/_/g, ' ')).toLowerCase().trim();\n    \n    // Pull rich metadata from BOTH files (meta file is authoritative when present)\n    const brandNames = (meta.brand_names || openfda.brand_name || []).slice(0, 5);\n    const genericNames = (meta.generic_names || openfda.generic_name || []).slice(0, 5);\n    const manufacturers = (meta.manufacturer_names || openfda.manufacturer_name || []).slice(0, 3);\n    const rxcuiList = (meta.rxcui || openfda.rxcui || []).slice(0, 10);\n    const productType = (meta.product_type || openfda.product_type || []).join(', ');\n    const route = (meta.route || openfda.route || []).join(', ');\n    const splSetId = meta.spl_set_id || (openfda.spl_set_id || [])[0] || null;\n    const effectiveTime = meta.effective_time || label.effective_time || null;\n    \n    for (const section of SECTIONS) {\n        if (!label[section]) continue;\n        \n        const sectionText = Array.isArray(label[section])\n            ? label[section].join('\\n\\n')\n            : String(label[section]);\n        \n        if (!sectionText.trim()) continue;\n        \n        const chunks = splitIntoChunks(sectionText, MAX_CHUNK_CHARS, OVERLAP_CHARS);\n        \n        chunks.forEach((chunk, idx) => {\n            const sectionLabel = section.replace(/_/g, ' ');\n            const contextHeader = `[${drugName.toUpperCase()} - ${sectionLabel}]`;\n            const fullChunk = `${contextHeader}\\n${chunk}`;\n            \n            output.push({\n                json: {\n                    pageContent: fullChunk,\n                    metadata: {\n                        // Identity\n                        drug_name: drugName,\n                        section: section,\n                        chunk_index: idx,\n                        total_chunks_in_section: chunks.length,\n                        \n                        // Names (useful for the Classifier and Tool Agent)\n                        brand_names: brandNames.join(', '),\n                        generic_names: genericNames.join(', '),\n                        manufacturers: manufacturers.join(', '),\n                        \n                        // Standard identifiers (useful for the Tool Agent\n                        // when calling RxNorm or OpenFDA APIs)\n                        rxcui: rxcuiList.join(', '),\n                        spl_set_id: splSetId,\n                        \n                        // Drug characteristics (useful for safety filtering)\n                        product_type: productType,\n                        route: route,\n                        \n                        // Provenance (useful for the Response Agent's citations)\n                        source: 'OpenFDA',\n                        effective_time: effectiveTime\n                    }\n                }\n            });\n        });\n    }\n}\n\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -48
+      ],
+      "id": "a1bbd9f5-a8e4-4255-9045-ad723806f6d2",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "pharmacy_knowledge",
+        "options": {
+          "columnNames": {
+            "values": {}
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        208,
+        -208
+      ],
+      "id": "afd62a9a-744b-49ab-b67f-5e16628d584a",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.pageContent }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "drug_name",
+                "value": "={{ $json.metadata.drug_name }}"
+              },
+              {
+                "name": "section",
+                "value": "={{ $json.metadata.section }}"
+              },
+              {
+                "name": "brand_names",
+                "value": "={{ $json.metadata.brand_names }}"
+              },
+              {
+                "name": "generic_names",
+                "value": "={{ $json.metadata.generic_names }}"
+              },
+              {
+                "name": "source",
+                "value": "={{ $json.metadata.source }}"
+              },
+              {
+                "name": "chunk_index",
+                "value": "={{ $json.metadata.chunk_index }}"
+              },
+              {
+                "name": "rxcui",
+                "value": "={{ $json.metadata.rxcui }}"
+              },
+              {
+                "name": "manufacturers",
+                "value": "={{ $json.metadata.manufacturers }}"
+              },
+              {
+                "name": "spl_set_id",
+                "value": "={{ $json.metadata.spl_set_id }}"
+              },
+              {
+                "name": "effective_time",
+                "value": "={{ $json.metadata.effective_time }}"
+              },
+              {
+                "name": "product_type",
+                "value": "={{ $json.metadata.product_type }}"
+              },
+              {
+                "name": "route",
+                "value": "={{ $json.metadata.route }}"
+              },
+              {
+                "name": "total_chunks_in_section",
+                "value": "={{ $json.metadata.total_chunks_in_section }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        368,
+        64
+      ],
+      "id": "73885a9c-5a33-401e-a0f5-774caf1792ab",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 100000,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        496,
+        256
+      ],
+      "id": "c39ac3dd-f979-4ce8-8fdd-b23d8248698a",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "modelName": "embed-multilingual-v3.0"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+      "typeVersion": 1,
+      "position": [
+        96,
+        128
+      ],
+      "id": "1237b911-3838-433b-b305-9709c820e55a",
+      "name": "Embeddings Cohere",
+      "credentials": {
+        "cohereApi": {
+          "id": "rhOTqq3eXiT3G23W",
+          "name": "Cohere account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Cohere": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7aab9a1c-c1b6-4ce5-8f60-f166cb7efe2a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c7d3c448da95d5f23cc39b0bb268482ec09bb723a48a5e653b65e036447f2b3e"
+  },
+  "id": "TMB1N0N5CHPuzWWt",
+  "tags": []
+}

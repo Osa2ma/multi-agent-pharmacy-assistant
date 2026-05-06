@@ -1,0 +1,28 @@
+{
+  "drug_query": "tramadol",
+  "generic_names": [
+    "TRAMADOL HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "TRAMADOL HYDROCHLORIDE"
+  ],
+  "manufacturer_names": [
+    "Sun Pharmaceutical Industries, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "833709",
+    "833711",
+    "833713"
+  ],
+  "spl_id": "a994e116-d201-47f9-baaf-dd76a84eba7e",
+  "spl_set_id": "004de5a4-80f8-4040-a6ea-be5e99352a36",
+  "effective_time": "20251120",
+  "fetched_at": "2026-05-02T20:49:36.008523Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

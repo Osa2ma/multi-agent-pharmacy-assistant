@@ -1,0 +1,33 @@
+{
+  "drug_query": "empagliflozin",
+  "generic_names": [
+    "EMPAGLIFLOZIN AND METFORMIN HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Synjardy"
+  ],
+  "manufacturer_names": [
+    "Boehringer Ingelheim Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1664315",
+    "1664321",
+    "1664323",
+    "1664325",
+    "1664326",
+    "1664328",
+    "1665367",
+    "1665369"
+  ],
+  "spl_id": "06cb5e7a-ca7a-474a-a968-b3ddc7af1c43",
+  "spl_set_id": "0fdd0255-0055-65f3-b2c0-db8fbb87beae",
+  "effective_time": "20260130",
+  "fetched_at": "2026-05-02T20:48:32.008358Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

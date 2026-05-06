@@ -1,0 +1,96 @@
+{
+  "openfda": {
+    "application_number": [
+      "NDA017011"
+    ],
+    "brand_name": [
+      "PRED FORTE"
+    ],
+    "generic_name": [
+      "PREDNISOLONE ACETATE"
+    ],
+    "manufacturer_name": [
+      "Allergan, Inc."
+    ],
+    "product_ndc": [
+      "11980-180"
+    ],
+    "product_type": [
+      "HUMAN PRESCRIPTION DRUG"
+    ],
+    "route": [
+      "OPHTHALMIC"
+    ],
+    "substance_name": [
+      "PREDNISOLONE ACETATE"
+    ],
+    "rxcui": [
+      "1376336",
+      "1548724"
+    ],
+    "spl_id": [
+      "bff1726c-7781-49de-8a61-bc37a755c92b"
+    ],
+    "spl_set_id": [
+      "00a5aa88-e361-4ea7-8922-530c738b726e"
+    ],
+    "package_ndc": [
+      "11980-180-01",
+      "11980-180-06",
+      "11980-180-05",
+      "11980-180-10",
+      "11980-180-15",
+      "11980-180-11"
+    ],
+    "is_original_packager": [
+      true
+    ],
+    "upc": [
+      "0311980180058",
+      "0311980180157",
+      "0311980180102"
+    ],
+    "unii": [
+      "8B2807733D"
+    ]
+  },
+  "indications_and_usage": [
+    "INDICATIONS AND USAGE PRED FORTE ® is indicated for the treatment of steroid-responsive inflammation of the palpebral and bulbar conjunctiva, cornea, and anterior segment of the globe."
+  ],
+  "dosage_and_administration": [
+    "DOSAGE AND ADMINISTRATION Shake well before using. Instill one to two drops into the conjunctival sac two to four times daily. During the initial 24 to 48 hours, the dosing frequency may be increased if necessary. Care should be taken not to discontinue therapy prematurely. If signs and symptoms fail to improve after 2 days, the patient should be re-evaluated (see PRECAUTIONS )."
+  ],
+  "contraindications": [
+    "CONTRAINDICATIONS PRED FORTE ® suspension is contraindicated in acute untreated purulent ocular infections, in most viral diseases of the cornea and conjunctiva including epithelial herpes simplex keratitis (dendritic keratitis), vaccinia, and varicella, and also in mycobacterial infection of the eye and fungal diseases of ocular structures. PRED FORTE ® suspension is also contraindicated in individuals with known or suspected hypersensitivity to any of the ingredients of this preparation and to other corticosteroids."
+  ],
+  "warnings": [
+    "WARNINGS Prolonged use of corticosteroids may result in posterior subcapsular cataract formation and may increase intraocular pressure in susceptible individuals, resulting in glaucoma with damage to the optic nerve, defects in visual acuity and fields of vision. Prolonged use may also suppress the host immune response and thus increase the hazard of secondary ocular infections. If this product is used for 10 days or longer, intraocular pressure should be routinely monitored even though it may be difficult in children and uncooperative patients. Steroids should be used with caution in the presence of glaucoma. Intraocular pressure should be checked frequently. Various ocular diseases and long-term use of topical corticosteroids have been known to cause corneal and scleral thinning. Use of topical corticosteroids in the presence of thin corneal or scleral tissue may lead to perforation. Acute purulent infections of the eye may be masked or activity enhanced by the presence of corticosteroid medication. The use of steroids after cataract surgery may delay healing and increase the incidence of bleb formation. Use of ocular steroids may prolong the course and may exacerbate the severity of many viral infections of the eye (including herpes simplex). Employment of a corticosteroid medication in the treatment of patients with a history of herpes simplex requires great caution; frequent slit lamp microscopy is recommended. PRED FORTE ® suspension contains sodium bisulfite, a sulfite that may cause allergic-type reactions, including anaphylactic symptoms and life-threatening or less severe asthmatic episodes in certain susceptible people. The overall prevalence of sulfite sensitivity in the general population is unknown and probably low. Sulfite sensitivity is seen more frequently in asthmatic than in non-asthmatic people."
+  ],
+  "adverse_reactions": [
+    "ADVERSE REACTIONS The following adverse reactions have been identified during use of PRED FORTE ® . Because reactions are reported voluntarily from a population of uncertain size, it is not always possible to reliably estimate their frequency or establish a causal relationship to drug exposure. Adverse reactions include elevation of intraocular pressure (IOP) with possible development of glaucoma and infrequent optic nerve damage, posterior subcapsular cataract formation, and delayed wound healing. The development of secondary ocular infection (bacterial, fungal, and viral) has occurred. Fungal and viral infections of the cornea are particularly prone to develop coincidentally with long-term applications of steroids. The possibility of fungal invasion should be considered in any persistent corneal ulceration where steroid treatment has been used (see PRECAUTIONS ). Other adverse reactions reported with the use of prednisolone acetate ophthalmic suspension include: allergic reactions; dysgeusia; eye pain; foreign body sensation; headache; pruritus; rash; transient burning and stinging upon instillation and other minor symptoms of ocular irritation; urticaria; and visual disturbance (blurry vision). Keratitis, conjunctivitis, corneal ulcers, mydriasis, conjunctival hyperemia, loss of accommodation and ptosis have occasionally been reported following local use of corticosteroids. Corticosteroid-containing preparations have also been reported to cause acute anterior uveitis and perforation of the globe."
+  ],
+  "pregnancy": [
+    "Pregnancy Prednisolone has been shown to be teratogenic in mice when given in doses 1-10 times the human dose. Dexamethasone, hydrocortisone, and prednisolone were ocularly applied to both eyes of pregnant mice five times per day on days 10 through 13 of gestation. A significant increase in the incidence of cleft palate was observed in the fetuses of the treated mice. There are no adequate well-controlled studies in pregnant women. Prednisolone should be used during pregnancy only if the potential benefit justifies the potential risk to the fetus. Nursing Mothers It is not known whether topical ophthalmic administration of corticosteroids could result in sufficient systemic absorption to produce detectable quantities in breast milk. Systemically administered corticosteroids appear in human milk and could suppress growth, interfere with endogenous corticosteroid production, or cause other untoward effects. Because of the potential for serious adverse reactions in nursing infants from prednisolone, a decision should be made whether to discontinue nursing or to discontinue the drug, taking into account the importance of the drug to the mother. Pediatric Use The safety and effectiveness in pediatric patients have been established. Use in pediatric patients is supported by evidence from adequate and well-controlled studies of prednisolone acetate ophthalmic suspension in adults with additional data in pediatric patients. Geriatric Use No overall differences in safety or effectiveness have been observed between elderly and younger patients."
+  ],
+  "nursing_mothers": [
+    "Nursing Mothers It is not known whether topical ophthalmic administration of corticosteroids could result in sufficient systemic absorption to produce detectable quantities in breast milk. Systemically administered corticosteroids appear in human milk and could suppress growth, interfere with endogenous corticosteroid production, or cause other untoward effects. Because of the potential for serious adverse reactions in nursing infants from prednisolone, a decision should be made whether to discontinue nursing or to discontinue the drug, taking into account the importance of the drug to the mother."
+  ],
+  "pediatric_use": [
+    "Pediatric Use The safety and effectiveness in pediatric patients have been established. Use in pediatric patients is supported by evidence from adequate and well-controlled studies of prednisolone acetate ophthalmic suspension in adults with additional data in pediatric patients."
+  ],
+  "geriatric_use": [
+    "Geriatric Use No overall differences in safety or effectiveness have been observed between elderly and younger patients."
+  ],
+  "overdosage": [
+    "OVERDOSAGE Overdosage will not ordinarily cause acute problems. If accidentally ingested, drink fluids to dilute."
+  ],
+  "clinical_pharmacology": [
+    "CLINICAL PHARMACOLOGY Prednisolone acetate is a glucocorticoid that, on the basis of weight, has 3 to 5 times the anti-inflammatory potency of hydrocortisone. Glucocorticoids inhibit the edema, fibrin deposition, capillary dilation, and phagocytic migration of the acute inflammatory response, as well as capillary proliferation, deposition of collagen, and scar formation."
+  ],
+  "how_supplied": [
+    "HOW SUPPLIED PRED FORTE ® (prednisolone acetate ophthalmic suspension, USP) 1% is supplied sterile in opaque white LDPE plastic bottles with droppers with pink high impact polystyrene (HIPS) caps as follows: 1 mL in 5 mL bottle - NDC 11980-180-01 5 mL in 10 mL bottle - NDC 11980-180-05 10 mL in 15 mL bottle - NDC 11980-180-10 15 mL in 15 mL bottle - NDC 11980-180-15 Storage : Store at up to 25°C (77°F). Protect from freezing. Store in an upright position. Revised : 02 / 2024 Distributed by: AbbVie, Inc. North Chicago, IL 60064 © 2024 AbbVie. All rights reserved. Pred Forte and its design are trademarks of Allergan, Inc., an AbbVie company. v2.0USPI180 Shape Description automatically generated"
+  ],
+  "information_for_patients": [
+    "Information for P atients Advise patients that if eye inflammation or pain persists longer than 48 hours or becomes aggravated, they should consult a physician. Advise patients that to prevent eye injury or contamination, care should be taken to avoid touching the bottle tip to eyelids or to any other surface. The use of this bottle by more than one person may spread infection. Keep bottle tightly closed when not in use. Keep out of the reach of children. Advise patients that PRED FORTE ® suspension contains benzalkonium chloride, which may be absorbed by soft contact lenses. Contact lenses should be removed prior to application of PRED FORTE ® and may be reinserted 15 minutes following its administration."
+  ]
+}

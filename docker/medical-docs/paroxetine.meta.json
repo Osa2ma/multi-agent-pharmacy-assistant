@@ -1,0 +1,26 @@
+{
+  "drug_query": "paroxetine",
+  "generic_names": [
+    "PAROXETINE"
+  ],
+  "brand_names": [
+    "Paroxetine"
+  ],
+  "manufacturer_names": [
+    "REMEDYREPACK INC."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1738495"
+  ],
+  "spl_id": "4f983394-d7ad-5db3-e063-6394a90a271a",
+  "spl_set_id": "05ec70fd-4c65-495f-ba12-e8433a10b655",
+  "effective_time": "20260416",
+  "fetched_at": "2026-05-02T20:51:00.897613Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

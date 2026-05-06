@@ -1,0 +1,28 @@
+{
+  "drug_query": "insulin aspart",
+  "generic_names": [
+    "INSULIN ASPART"
+  ],
+  "brand_names": [
+    "NOVOLOG"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "INTRAVENOUS",
+    "SUBCUTANEOUS"
+  ],
+  "rxcui": [
+    "1653202",
+    "1653204"
+  ],
+  "spl_id": "5907ee0c-c7d5-4e1c-9c12-8390ccb34c42",
+  "spl_set_id": "13891e5a-e57a-46e8-911c-2f680352b52b",
+  "effective_time": "20231215",
+  "fetched_at": "2026-05-02T20:48:35.588070Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

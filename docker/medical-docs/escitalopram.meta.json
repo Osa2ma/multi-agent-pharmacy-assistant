@@ -1,0 +1,26 @@
+{
+  "drug_query": "escitalopram",
+  "generic_names": [
+    "ESCITALOPRAM ORAL"
+  ],
+  "brand_names": [
+    "Escitalopram Oral Solution"
+  ],
+  "manufacturer_names": [
+    "Chartwell RX, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "351285"
+  ],
+  "spl_id": "2f987c95-695b-d900-e063-6294a90a0cf8",
+  "spl_set_id": "0458445b-e431-4c82-86b8-90373813c10a",
+  "effective_time": "20250305",
+  "fetched_at": "2026-05-02T20:50:55.879204Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

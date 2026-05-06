@@ -1,0 +1,26 @@
+{
+  "drug_query": "simvastatin",
+  "generic_names": [
+    "SIMVASTATIN"
+  ],
+  "brand_names": [
+    "SIMVASTATIN"
+  ],
+  "manufacturer_names": [
+    "PD-Rx Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198211"
+  ],
+  "spl_id": "4bbbb5c9-6c29-bc3b-e063-6294a90a6cce",
+  "spl_set_id": "00896fff-081d-4553-be8c-1999a8a73dda",
+  "effective_time": "20260226",
+  "fetched_at": "2026-05-02T20:49:11.220353Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

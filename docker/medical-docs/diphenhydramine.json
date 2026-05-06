@@ -1,0 +1,55 @@
+{
+  "openfda": {
+    "application_number": [
+      "M012"
+    ],
+    "brand_name": [
+      "Childrens Allergy Relief"
+    ],
+    "generic_name": [
+      "DIPHENHYDRAMINE HCL"
+    ],
+    "manufacturer_name": [
+      "Best Choice"
+    ],
+    "product_ndc": [
+      "63941-505"
+    ],
+    "product_type": [
+      "HUMAN OTC DRUG"
+    ],
+    "route": [
+      "ORAL"
+    ],
+    "substance_name": [
+      "DIPHENHYDRAMINE HCL"
+    ],
+    "rxcui": [
+      "1049906"
+    ],
+    "spl_id": [
+      "448524ca-2fda-44ab-b1f8-edf8db006713"
+    ],
+    "spl_set_id": [
+      "0035e6a4-b3ef-4e0b-aa7f-7453dd065f4d"
+    ],
+    "package_ndc": [
+      "63941-505-26"
+    ],
+    "is_original_packager": [
+      true
+    ],
+    "unii": [
+      "TC2D6JAD40"
+    ]
+  },
+  "indications_and_usage": [
+    "Uses temporarily relieves these symptoms due to hay fever or other respiratory allergies: ■ sneezing ■ itching of the nose or throat ■ runny nose ■ itchy watery eyes ■temporarily relieves these symptoms due to the common cold: ■ sneezing ■ runny nose"
+  ],
+  "dosage_and_administration": [
+    "Directions ■ if needed, take every 4-6 hours ■ do not take more than 6 doses in 24-hours children under 4 years of age Do not use children 4 to under 6 years of age Do not use unless directed by a doctor children 6 to under 12 years of age 1 to 2 teaspoonfuls (5 ml to 10 ml)"
+  ],
+  "warnings": [
+    "Warnings Do not use ■ with any other product containing diphenhydramine, even one used on skin ■ to make a child sleepy Ask a doctor before use if the child has ■ glaucoma ■ a breathing problem such as chronic bronchitis"
+  ]
+}

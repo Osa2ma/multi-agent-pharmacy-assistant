@@ -1,0 +1,24 @@
+{
+  "drug_query": "ibuprofen",
+  "generic_names": [
+    "IBUPROFEN"
+  ],
+  "brand_names": [
+    "Ibuprofen Dye Free"
+  ],
+  "manufacturer_names": [
+    "CVS Pharmacy"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [],
+  "spl_id": "4bd1345d-d116-426e-825f-bbf29381746a",
+  "spl_set_id": "00653b7c-7099-487e-9a01-e89781c21323",
+  "effective_time": "20260429",
+  "fetched_at": "2026-05-02T20:49:21.329268Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

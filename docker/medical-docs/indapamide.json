@@ -1,0 +1,102 @@
+{
+  "openfda": {
+    "application_number": [
+      "ANDA074461"
+    ],
+    "brand_name": [
+      "Indapamide"
+    ],
+    "generic_name": [
+      "INDAPAMIDE"
+    ],
+    "manufacturer_name": [
+      "Rising Pharma Holdings, Inc."
+    ],
+    "product_ndc": [
+      "16571-875",
+      "16571-876"
+    ],
+    "product_type": [
+      "HUMAN PRESCRIPTION DRUG"
+    ],
+    "route": [
+      "ORAL"
+    ],
+    "substance_name": [
+      "INDAPAMIDE"
+    ],
+    "rxcui": [
+      "197815",
+      "197816"
+    ],
+    "spl_id": [
+      "7c1bd14b-7f8f-4ad6-9c3c-e6a0d9aad1cf"
+    ],
+    "spl_set_id": [
+      "0687ed93-4761-4f9c-887d-95309c03f60e"
+    ],
+    "package_ndc": [
+      "16571-875-01",
+      "16571-876-01"
+    ],
+    "is_original_packager": [
+      true
+    ],
+    "upc": [
+      "0316571875016",
+      "0316571876013"
+    ],
+    "nui": [
+      "N0000175359",
+      "N0000175420"
+    ],
+    "pharm_class_pe": [
+      "Increased Diuresis [PE]"
+    ],
+    "pharm_class_epc": [
+      "Thiazide-like Diuretic [EPC]"
+    ],
+    "unii": [
+      "F089I0511L"
+    ]
+  },
+  "indications_and_usage": [
+    "INDICATIONS Indapamide tablets are indicated for the treatment of hypertension, alone or in combination with other antihypertensive drugs. Indapamide tablets are also indicated for the treatment of salt and fluid retention associated with congestive heart failure. Usage in Pregnancy : The routine use of diuretics in an otherwise healthy woman is inappropriate and exposes mother and fetus to unnecessary hazard (see PRECAUTIONS below). Diuretics do not prevent development of toxemia of pregnancy, and there is no satisfactory evidence that they are useful in the treatment of developed toxemia. Edema during pregnancy may arise from pathological causes or from the physiologic and mechanical consequences of pregnancy. Indapamide is indicated in pregnancy when edema is due to pathologic causes, just as it is in the absence of pregnancy (however, see PRECAUTIONS below). Dependent edema in pregnancy, resulting from restriction of venous return by the expanded uterus, is properly treated through elevation of the lower extremities and use of support hose; use of diuretics to lower intravascular volume in this case is illogical and unnecessary. There is hypervolemia during normal pregnancy which is not harmful to either the fetus or the mother (in the absence of cardiovascular disease), but which is associated with edema, including generalized edema in the majority of pregnant women. If this edema produces discomfort, increased recumbency will often provide relief. In rare instances, this edema may cause extreme discomfort which is not relieved by rest. In these cases, a short course of diuretics may provide relief and may be appropriate."
+  ],
+  "dosage_and_administration": [
+    "DOSAGE & ADMINISTRATION Hypertension : The adult starting indapamide dose for hypertension is 1.25 mg as a single daily dose taken in the morning. If the response to 1.25 mg is not satisfactory after 4 weeks, the daily dose may be increased to 2.5 mg taken once daily. If the response to 2.5 mg is not satisfactory after 4 weeks, the daily dose may be increased to 5.0 mg taken once daily, but adding another antihypertensive should be considered. Edema of Congestive Heart Failure : The adult starting indapamide dose for edema of congestive heart failure is 2.5 mg as a single daily dose taken in the morning. If the response to 2.5 mg is not satisfactory after one week, the daily dose may be increased to 5.0 mg taken once daily. If the antihypertensive response to indapamide is insufficient, indapamide may be combined with other antihypertensive drugs, with careful monitoring of blood pressure. It is recommended that the usual dose of other agents be reduced by 50% during initial combination therapy. As the blood pressure response becomes evident, further dosage adjustments may be necessary. In general, doses of 5.0 mg and larger have not appeared to provide additional effects on blood pressure or heart failure, but are associated with a greater degree of hypokalemia. There is minimal clinical trial experience in patients with doses greater than 5.0 mg once a day."
+  ],
+  "contraindications": [
+    "CONTRAINDICATIONS Anuria. Known hypersensitivity to indapamide or to other sulfonamide-derived drugs."
+  ],
+  "warnings": [
+    "WARNINGS Severe cases of hyponatremia, accompanied by hypokalemia have been reported with recommended doses of indapamide. This occurred primarily in elderly females. (See PRECAUTIONS , Geriatric Use .) This appears to be dose related. Also, a large case-controlled pharmacoepidemiology study indicates that there is an increased risk of hyponatremia with indapamide 2.5 mg and 5 mg doses. Hyponatremia considered possibly clinically significant (< 125 mEq/L) has not been observed in clinical trials with the 1.25 mg dosage (see PRECAUTIONS ). Thus, patients should be started at the 1.25 mg dose and maintained at the lowest possible dose. (See DOSAGE AND ADMINISTRATION .) Hypokalemia occurs commonly with diuretics (see ADVERSE REACTIONS, hypokalemia ), and electrolyte monitoring is essential, particularly in patients who would be at increased risk from hypokalemia, such as those with cardiac arrhythmias or who are receiving concomitant cardiac glycosides. In general, diuretics should not be given concomitantly with lithium because they reduce its renal clearance and add a high risk of lithium toxicity. Read prescribing information for lithium preparations before use of such concomitant therapy."
+  ],
+  "adverse_reactions": [
+    "ADVERSE REACTIONS Most adverse effects have been mild and transient. The clinical adverse reactions listed in Table 1 represent data from Phase II/III placebo-controlled studies (306 patients given indapamide 1.25 mg). The clinical adverse reactions listed in Table 2 represent data from Phase II placebo-controlled studies and long-term controlled clinical trials (426patients given indapamide 2.5 mg or 5.0 mg). The reactions are arranged into two groups: 1) a cumulative incidence equal to or greater than 5%; 2)a cumulative incidence less than 5%. Reactions are counted regardless of relation to drug. TABLE 1: Adverse Reaction from Studies of 1.25mg Incidence ≥ 5% Incidence < 5%* BODY AS A WHOLE Headache Asthenia Infection Flu Syndrome Pain Abdominal Pain Back Pain Chest Pain GASTROINTESTINAL SYSTEM Constipation Diarrhea Dyspepsia Nausea METABOLIC SYSTEM Peripheral Edema CENTRAL NERVOUS SYSTEM Nervousness Dizziness Hypertonia RESPIRATORY SYSTEM Cough RHINITIS Pharyngitis Sinusitis SPECIAL SENSES Conjunctivitis *OTHER All other clinical adverse reactions occurred at an incidence of <1%. Approximately 4% of patients given indapamide 1.25 mg compared to 5% of the patients given placebo discontinued treatment in the trials of up to eight weeks because of adverse reactions. In controlled clinical trials of six to eight weeks in duration, 20% of patients receiving indapamide 1.25 mg, 61% of patients receiving indapamide 5.0 mg, and 80% of patients receiving indapamide 10.0 mg had at least one potassium value below 3.4 mEq/L. In the indapamide 1.25 mg group, about 40% of those patients who reported hypokalemia as a laboratory adverse event returned to normal serum potassium values without intervention. Hypokalemia with concomitant clinical signs or symptoms occurred in 2% of patients receiving indapamide 1.25 mg. TABLE 2: Adverse Reactions from Studies of 2.5 mg and 5.0 mg Incidence ≥ 5% Incidence < 5% CENTRAL NERVOUS SYSTEM/ NEUROMUSCULAR Headache Lightheadedness Dizziness Drowsiness Fatigue, weakness, loss of energy, lethargy, tiredness, or malaise Vertigo Insomnia Depression Muscle cramps or spasm, or numbness of the extremities Blurred Visoin Nervousness, tension, anxiety, irritability, or agitation GASTROINTESTINAL SYSTEM Constipation Nausea Vomiting Diarrhea Gastric irritation Abdominal pain or cramps Anorexia CARDIOVASCULAR SYSTEM Orthostatic hypotension Premature ventricular contractions Irregular heart beat Palpitations GENITOURINARY SYSTEM Frequency of urination Nocturia Polyuria DERMATOLOGIC/HYPERSENSITIVITY Rash Hives Pruritus Vasculitis OTHER Impotence or reduced libido Rhinorrhea Flushing Hyperuricemia Hyperglycemia Hyponatremia Hypochloremia Increase in serum urea nitrogen (BUN) or creatinine Glycosuria Weight loss Dry mouth Tingling of extremities Because most of these data are from long-term studies (up to 40 weeks of treatment), it is probable that many of the adverse experiences reported are due to causes other than the drug. Approximately 10% of patients given indapamide discontinued treatment in long-term trials because of reactions either related or unrelated to the drug. Hypokalemia with concomitant clinical signs or symptoms occurred in 3% of patients receiving indapamide 2.5 mg q.d. and 7% of patients receiving indapamide 5 mg q.d. In long-term controlled clinical trials comparing the hypokalemic effects of daily doses of indapamide and hydrochlorothiazide, however, 47% of patients receiving indapamide 2.5 mg, 72% of patients receiving indapamide 5 mg, and 44% of patients receiving hydrochlorothiazide 50 mg had at least one potassium value (out of a total of 11 taken during the study) below 3.5 mEq/L. In the indapamide 2.5 mg group, over 50% of those patients returned to normal serum potassium values without intervention. In clinical trials of six to eight weeks, the mean changes in selected values were as shown in the tables below. Mean Changes from Baseline after 8 Weeks of Treatment - 1.25 mg Serum Electrolytes (mEq/ L) Serum Uric Acid (mg/dL) BUN (mg/dL) Potassium Sodium Chloride Indapamide 1.25 mg (n=255 to 257) -0.28 -0.63 -2.60 0.69 1.46 Placebo (n=263 to 266) 0.00 -0.11 -0.21 0.06 0.06 No patients receiving indapamide 1.25 mg experienced hyponatremia considered possibly clinically significant (< 125 mEq/L). Mean Changes from Baseline after 40 Weeks of Treatment - 2.5 mg and 5.0 mg Serum Electrolytes (mEq/L) Serum Uric Acid (mg/dL) BUN (mg/dL) Potassium Sodium Chloride Indapamide 2.5 mg (n=76) -0.4 -0.6 -3.6 0.7 -0.1 Indapamide 5.0 mg (n=81) -0.6 -0.7 -5.1 1.1 1.4 The following reactions have been reported with clinical usage of indapamide: jaundice (intrahepatic cholestatic jaundice), hepatitis, pancreatitis and abnormal liver function tests. These reactions were reversible with discontinuance of the drug. Also reported are erythema multiforme, Stevens-Johnson Syndrome, bullous eruptions, purpura, photosensitivity, fever, pneumonitis, anaphylactic reactions, agranulocytosis, leukopenia, thrombocytopenia and aplastic anemia. Other adverse reactions reported with antihypertensive/diuretics are necrotizing angiitis, respiratory distress, sialadenitis, xanthopsia. Postmarketing Experience Eye Disorders: Choroidal effusion, acute myopia, and angle-closure glaucoma (frequency not known). 1 1 Module 2.5 SER-indapamide-choroidal effusion-acute myopia and angleclosure glaucoma-Jul2020 To report SUSPECTED ADVERSE REACTIONS, contact Rising Pharma Holdings, Inc. at 1-844-874-7464 or FDA at 1-800-FDA-1088 or www. fda.gov/medwatch."
+  ],
+  "drug_interactions": [
+    "Drug Interactions Other Antihypertensives : Indapamide may add to or potentiate the action of other antihypertensive drugs. In limited controlled trials that compared the effect of indapamide combined with other antihypertensive drugs with the effect of the other drugs administered alone, there was no notable change in the nature or frequency of adverse reactions associated with the combined therapy. Lithium : See WARNINGS . Post-Sympathectomy Patient : The antihypertensive effect of the drug may be enhanced in the post-sympathectomized patient. Norepinephrine : Indapamide, like the thiazides, may decrease arterial responsiveness to norepinephrine, but this diminution is not sufficient to preclude effectiveness of the pressor agent for therapeutic use."
+  ],
+  "pregnancy": [
+    "Pregnancy : Teratogenic Effects : Reproduction studies have been performed in rats, mice and rabbits at doses up to 6,250 times the therapeutic human dose and have revealed no evidence of impaired fertility or harm to the fetus due to indapamide. Postnatal development in rats and mice was unaffected by pretreatment of parent animals during gestation. There are, however, no adequate and well-controlled studies in pregnant women. Moreover, diuretics are known to cross the placental barrier and appear in cord blood. Because animal reproduction studies are not always predictive of human response, this drug should be used during pregnancy only if clearly needed. There may be hazards associated with this use such as fetal or neonatal jaundice, thrombocytopenia, and possibly other adverse reactions that have occurred in the adult."
+  ],
+  "nursing_mothers": [
+    "Nursing Mothers: It is not known whether this drug is excreted in human milk. Because most drugs are excreted in human milk, if use of this drug is deemed essential, the patient should stop nursing."
+  ],
+  "pediatric_use": [
+    "Pediatric Use : Safety and effectiveness of indapamide in pediatric patients have not been established."
+  ],
+  "geriatric_use": [
+    "Geriatric Use : Clinical studies of indapamide did not include sufficient numbers of subjects aged 65 and over to determine whether they respond differently from younger subjects. Other reported clinical experience has not identified differences in responses between the elderly and younger patients. In general, dose selection for an elderly patient should be cautious, usually starting at the low end of the dosing range, reflecting the greater frequency of decreased hepatic, renal, or cardiac function, and of concomitant disease or other drug therapy. Severe cases of hyponatremia, accompanied by hypokalemia have been reported with recommended doses of indapamide in elderly females (see WARNINGS )."
+  ],
+  "overdosage": [
+    "OVERDOSAGE Symptoms of overdosage include nausea, vomiting, weakness, gastrointestinal disorders and disturbances of electrolyte balance. In severe instances, hypotension and depressed respiration may be observed. If this occurs, support of respiration and cardiac circulation should be instituted. There is no specific antidote. An evacuation of the stomach is recommended by emesis and gastric lavage after which the electrolyte and fluid balance should be evaluated carefully."
+  ],
+  "clinical_pharmacology": [
+    "CLINICAL PHARMACOLOGY Indapamide is the first of a new class of antihypertensive/diuretics, the indolines. The oral administration of 2.5 mg (two 1.25 mg tablets) of indapamide to male subjects produced peak concentrations of approximately 115 ng/mL of the drug in blood within two hours. The oral administration of 5 mg (two 2.5 mg tablets) of indapamide to healthy male subjects produced peak concentrations of approximately 260 ng/mL of the drug in the blood within two hours. A minimum of 70% of a single oral dose is eliminated by the kidneys and an additional 23% by the gastrointestinal tract, probably including the biliary route. The half-life of indapamide in whole blood is approximately 14 hours. Indapamide is preferentially and reversibly taken up by the erythrocytes in the peripheral blood. The whole blood/plasma ratio is approximately 6:1 at the time of peak concentration and decreases to 3.5:1 at eight hours. From 71 to 79% of the indapamide in plasma is reversibly bound to plasma proteins. Indapamide is an extensively metabolized drug, with only about 7% of the total dose administered, recovered in the urine as unchanged drug during the first 48 hours after administration. The urinary elimination of 14 C-labeled indapamide and metabolites is biphasic with a terminal half-life of excretion of total radioactivity of 26 hours. In a parallel design double-blind, placebo controlled trial in hypertension, daily doses of indapamide between 1.25 mg and 10.0 mg produced dose related antihypertensive effects. Doses of 5.0 and 10.0 mg were not distinguishable from each other although each was differentiated from placebo and 1.25 mg indapamide. At daily doses of 1.25 mg, 5.0 mg and 10.0 mg, a mean decrease of serum potassium of 0.28, 0.61 and 0.76 mEq/L, respectively, was observed and uric acid increased by about 0.69 mg/100 mL. In other parallel design, dose-ranging clinical trials in hypertension and edema, daily doses of indapamide between 0.5 and 5.0 mg produced dose related effects. Generally, doses of 2.5 and 5.0 mg were not distinguishable from each other although each was differentiated from placebo and from 0.5 or 1.0 mg indapamide. At daily doses of 2.5 and 5.0 mg a mean decrease of serum potassium of 0.5 and 0.6 mEq/Liter, respectively, was observed and uric acid increased by about 1.0 mg/100 mL. At these doses, the effects of indapamide on blood pressure and edema are approximately equal to those obtained with conventional doses of other antihypertensive/diuretics. In hypertensive patients, daily doses of 1.25, 2.5 and 5.0 mg of indapamide have no appreciable cardiac inotropic or chronotropic effect. The drug decreases peripheral resistance with little or no effect on cardiac output, rate or rhythm. Chronic administration of indapamide to hypertensive patients has little or no effect on glomerular filtration rate or renal plasma flow. Indapamide had an antihypertensive effect in patients with varying degrees of renal impairment, although in general, diuretic effects declined as renal function decreased. In a small number of controlled studies, indapamide taken with other antihypertensive drugs such as hydralazine, propranolol, guanethidine and methyldopa, appeared to have the additive effect typical of thiazide-type diuretics."
+  ],
+  "how_supplied": [
+    "HOW SUPPLIED Indapamide Tablets, USP are available containing 1.25 mg or 2.5 mg of indapamide, USP. The 1.25 mg tablets are pink, film coated, round, biconvex, beveled edge tablet debossed with “875” on one side of the tablet and plain on the other side. They are available as follows: NDC 16571-875-01 bottles of 100 tablets The 2.5 mg tablets are white, film coated, round, biconvex, beveled edge tablet debossed with “876” on one side of the tablet and plain on the other side. They are available as follows: NDC 16571-876-01 bottles of 100 tablets Store at 20° to 25°C (68° to 77°F). [See USP Controlled Room Temperature.] Avoid excessive heat. Dispense in a tight, light-resistant container as defined in the USP using a child-resistant closure. Manufactured for: Rising Pharma Holdings, Inc. East Brunswick, NJ 08816 Revised: 04/2023 200653 PIR87610-01"
+  ]
+}

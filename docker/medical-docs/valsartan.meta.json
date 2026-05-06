@@ -1,0 +1,35 @@
+{
+  "drug_query": "valsartan",
+  "generic_names": [
+    "SACUBITRIL AND VALSARTAN"
+  ],
+  "brand_names": [
+    "ENTRESTO"
+  ],
+  "manufacturer_names": [
+    "Novartis Pharmaceuticals Corporation"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1656340",
+    "1656346",
+    "1656349",
+    "1656351",
+    "1656354",
+    "1656356",
+    "2679793",
+    "2679797",
+    "2679800",
+    "2679802"
+  ],
+  "spl_id": "a0cb416b-6ead-4623-949b-ee3d9dd1143a",
+  "spl_set_id": "000dc81d-ab91-450c-8eae-8eb74e72296f",
+  "effective_time": "20251029",
+  "fetched_at": "2026-05-02T20:48:46.136588Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

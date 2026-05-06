@@ -1,0 +1,26 @@
+{
+  "drug_query": "esomeprazole",
+  "generic_names": [
+    "ESOMEPRAZOLE MAGNESIUM"
+  ],
+  "brand_names": [
+    "Acid Reducer"
+  ],
+  "manufacturer_names": [
+    "CVS Pharmacy"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "433733"
+  ],
+  "spl_id": "5f0bc616-6126-4f48-b56c-e8874aed6e90",
+  "spl_set_id": "001817ea-906e-47f7-8605-41ba5a9abd21",
+  "effective_time": "20260121",
+  "fetched_at": "2026-05-02T20:50:17.639868Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

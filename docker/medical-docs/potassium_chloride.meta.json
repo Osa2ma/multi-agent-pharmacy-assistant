@@ -1,0 +1,27 @@
+{
+  "drug_query": "potassium chloride",
+  "generic_names": [
+    "POTASSIUM CHLORIDE"
+  ],
+  "brand_names": [
+    "Potassium Chloride"
+  ],
+  "manufacturer_names": [
+    "Epic Pharma, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "312529",
+    "628953"
+  ],
+  "spl_id": "3f74c669-3182-952f-e063-6294a90aad92",
+  "spl_set_id": "00615fad-ad3b-46e8-a89d-48290d937ae2",
+  "effective_time": "20250923",
+  "fetched_at": "2026-05-02T20:52:08.035856Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

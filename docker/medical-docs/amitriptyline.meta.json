@@ -1,0 +1,26 @@
+{
+  "drug_query": "amitriptyline",
+  "generic_names": [
+    "AMITRIPTYLINE HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Amitriptyline Hydrochloride"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "856834"
+  ],
+  "spl_id": "d8bc1bbb-9f8c-439b-b3b8-000fa58fdcf3",
+  "spl_set_id": "0067b698-ee1d-4524-b1cc-af1028d13736",
+  "effective_time": "20240612",
+  "fetched_at": "2026-05-02T20:51:09.493207Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

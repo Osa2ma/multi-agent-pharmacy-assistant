@@ -1,0 +1,26 @@
+{
+  "drug_query": "amoxicillin",
+  "generic_names": [
+    "AMOXICILLIN AND CLAVULANATE POTASSIUM"
+  ],
+  "brand_names": [
+    "AMOXICILLIN AND CLAVULANATE POTASSIUM"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "562508"
+  ],
+  "spl_id": "a2a30785-599c-4436-a3cc-b4db011b7a87",
+  "spl_set_id": "00cf4429-e37c-4490-b22d-3cd796124296",
+  "effective_time": "20240430",
+  "fetched_at": "2026-05-02T20:49:39.388421Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

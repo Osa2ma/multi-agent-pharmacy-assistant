@@ -1,0 +1,26 @@
+{
+  "drug_query": "ketorolac",
+  "generic_names": [
+    "KETOROLAC TROMETHAMINE"
+  ],
+  "brand_names": [
+    "Ketorolac Tromethamine"
+  ],
+  "manufacturer_names": [
+    "Asclemed USA, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "INTRAMUSCULAR"
+  ],
+  "rxcui": [
+    "1665459"
+  ],
+  "spl_id": "eada7d08-38b8-4c19-e053-2995a90ae3ac",
+  "spl_set_id": "004588ba-e109-4a53-9c9d-a42dea9bb848",
+  "effective_time": "20221012",
+  "fetched_at": "2026-05-02T20:49:32.417548Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "salmeterol",
+  "generic_names": [
+    "FLUTICASONE PROPIONATE AND SALMETEROL"
+  ],
+  "brand_names": [
+    "Fluticasone Propionate and Salmeterol"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "RESPIRATORY (INHALATION)"
+  ],
+  "rxcui": [
+    "1918209"
+  ],
+  "spl_id": "b6d73632-205b-4d93-bc38-f520fd6c189b",
+  "spl_set_id": "038db4da-1448-4603-a34d-2efd9059811b",
+  "effective_time": "20250821",
+  "fetched_at": "2026-05-02T20:50:39.725547Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

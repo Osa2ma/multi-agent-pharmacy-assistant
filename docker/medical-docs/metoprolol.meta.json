@@ -1,0 +1,26 @@
+{
+  "drug_query": "metoprolol",
+  "generic_names": [
+    "METOPROLOL TARTRATE"
+  ],
+  "brand_names": [
+    "Metoprolol Tartrate"
+  ],
+  "manufacturer_names": [
+    "PD-Rx Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "866924"
+  ],
+  "spl_id": "3739dcda-d80d-94c4-e063-6394a90a1dc6",
+  "spl_set_id": "00de1f16-f979-4dbf-aa60-246ffac8d410",
+  "effective_time": "20250610",
+  "fetched_at": "2026-05-02T20:48:51.410939Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

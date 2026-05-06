@@ -1,0 +1,137 @@
+{
+  "name": "Audit_Logger",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -64,
+        -176
+      ],
+      "id": "f53e7750-76f5-48c4-ba07-5bccf731e13a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE query_audit\nSET\n    pre_filter_verdict = CASE WHEN $1 = 'pre_filter_verdict' THEN $2 ELSE pre_filter_verdict END,\n    query_classification = CASE WHEN $1 = 'query_classification' THEN $2 ELSE query_classification END,\n    classification_confidence = CASE \n        WHEN $1 = 'classification_confidence' THEN $3::float \n        ELSE classification_confidence \n    END,\n    rag_documents_retrieved = CASE \n        WHEN $1 = 'rag_documents_retrieved' THEN $4::jsonb \n        ELSE rag_documents_retrieved \n    END,\n    api_calls_made = CASE \n        WHEN $1 = 'api_calls_made' THEN $4::jsonb \n        ELSE api_calls_made \n    END,\n    draft_response = CASE WHEN $1 = 'draft_response' THEN $2 ELSE draft_response END,\n    safety_verdict = CASE WHEN $1 = 'safety_verdict' THEN $2 ELSE safety_verdict END,\n    safety_reason = CASE WHEN $1 = 'safety_reason' THEN $2 ELSE safety_reason END,\n    final_response = CASE WHEN $1 = 'final_response' THEN $2 ELSE final_response END,\n    total_latency_ms = CASE \n        WHEN $1 = 'total_latency_ms' THEN $5::int \n        ELSE total_latency_ms \n    END,\n    llm_tokens_used = CASE \n        WHEN $1 = 'llm_tokens_used' THEN $5::int \n        ELSE llm_tokens_used \n    END,\n    error_log = CASE \n        WHEN TRIM($6) != '' \n        THEN COALESCE(error_log || chr(10), '') || $6 \n        ELSE error_log \n    END\nWHERE request_id = $7::uuid;",
+        "options": {
+          "queryReplacement": "={{ $json.step_name }}, {{ typeof $json.step_data === 'object' ? JSON.stringify($json.step_data) : String($json.step_data || ' ') }}, {{ $json.step_name === 'classification_confidence' ? $json.step_data : '0' }}, {{ ['rag_documents_retrieved', 'api_calls_made'].includes($json.step_name) ? (typeof $json.step_data === 'object' ? JSON.stringify($json.step_data) : $json.step_data) : '{}' }}, {{ ['total_latency_ms', 'llm_tokens_used'].includes($json.step_name) ? $json.step_data : '0' }}, {{ $json.error || ' ' }}, {{ $json.request_id }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        352,
+        -176
+      ],
+      "id": "8a9c664c-e028-4f92-ba2f-1e7a2b50cf84",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83988b53-8797-4a79-bda3-b5957f0570b8",
+              "name": "Success",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "837a11f9-391a-4836-aaba-680c69e7cfca",
+              "name": "request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "bb01b741-c7d2-4c56-a6a3-b7f6ebbd3d92",
+              "name": "logged_step",
+              "value": "={{ $json.step_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        -176
+      ],
+      "id": "da6d4f02-8f0d-43b0-a22c-9b03a0f27d56",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ALLOWED_STEPS = [\n    'pre_filter_verdict',\n    'query_classification',\n    'classification_confidence',\n    'rag_documents_retrieved',\n    'api_calls_made',\n    'draft_response',\n    'safety_verdict',\n    'safety_reason',\n    'final_response',\n    'total_latency_ms',\n    'llm_tokens_used'\n];\n\nconst data = $input.item.json;\n\nif (!data.request_id) {\n    throw new Error('audit_logger called without request_id');\n}\n\nif (!data.step_name) {\n    throw new Error('audit_logger called without step_name');\n}\n\nif (!ALLOWED_STEPS.includes(data.step_name)) {\n    throw new Error(`Invalid step_name: \"${data.step_name}\". Allowed values: ${ALLOWED_STEPS.join(', ')}`);\n}\n\nreturn {\n    json: {\n        request_id: data.request_id,\n        step_name: data.step_name,\n        step_data: data.step_data ?? null,\n        error: data.error || ''\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -176
+      ],
+      "id": "91306244-77d7-4655-8883-7727cb596d13",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "86248486-b314-43da-983d-0352c178471a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c7d3c448da95d5f23cc39b0bb268482ec09bb723a48a5e653b65e036447f2b3e"
+  },
+  "id": "8GzfyjqHaSkR9RbH",
+  "tags": []
+}

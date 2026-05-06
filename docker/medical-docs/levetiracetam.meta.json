@@ -1,0 +1,26 @@
+{
+  "drug_query": "levetiracetam",
+  "generic_names": [
+    "LEVETIRACETAM"
+  ],
+  "brand_names": [
+    "Levetiracetam"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "311288"
+  ],
+  "spl_id": "a151a4a8-e0c6-4b3e-a97f-0b100d0edef6",
+  "spl_set_id": "01aef7f7-6092-4e39-8451-dc02d8db9254",
+  "effective_time": "20251121",
+  "fetched_at": "2026-05-02T20:51:43.416450Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

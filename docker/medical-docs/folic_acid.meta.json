@@ -1,0 +1,27 @@
+{
+  "drug_query": "folic acid",
+  "generic_names": [
+    "FERROUS FUMARATE AND POLYSACCHRIDE IRON COMPLEX AND FOLIC ACID"
+  ],
+  "brand_names": [
+    "Integra F"
+  ],
+  "manufacturer_names": [
+    "U.S. Pharmaceutical Corporation"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "999823",
+    "999826"
+  ],
+  "spl_id": "7aa8c3c6-7a91-4217-9e48-e1dfcf938060",
+  "spl_set_id": "025fee85-53a8-4161-a806-44fd95d0ca74",
+  "effective_time": "20221108",
+  "fetched_at": "2026-05-02T20:52:03.835133Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "doxycycline",
+  "generic_names": [
+    "DOXYCYCLINE"
+  ],
+  "brand_names": [
+    "doxycycline"
+  ],
+  "manufacturer_names": [
+    "ST. MARY'S MEDICAL PARK PHARMACY"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1649988"
+  ],
+  "spl_id": "485b4423-7790-c85f-e063-6394a90a8208",
+  "spl_set_id": "00b2aa98-dea2-90c3-e063-6294a90a35d6",
+  "effective_time": "20260114",
+  "fetched_at": "2026-05-02T20:49:50.440196Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

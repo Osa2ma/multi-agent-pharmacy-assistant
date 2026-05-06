@@ -1,0 +1,26 @@
+{
+  "drug_query": "nifedipine",
+  "generic_names": [
+    "NIFEDIPINE"
+  ],
+  "brand_names": [
+    "Nifedipine"
+  ],
+  "manufacturer_names": [
+    "Aphena Pharma Solutions - Tennessee, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1812011"
+  ],
+  "spl_id": "544311df-93cf-46bb-9178-7a65deb6e211",
+  "spl_set_id": "09a04e5f-d3b0-4ee3-b12d-f74203262179",
+  "effective_time": "20190606",
+  "fetched_at": "2026-05-02T20:48:49.510965Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

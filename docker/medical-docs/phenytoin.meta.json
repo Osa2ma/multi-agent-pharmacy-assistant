@@ -1,0 +1,28 @@
+{
+  "drug_query": "phenytoin",
+  "generic_names": [
+    "PHENYTOIN SODIUM"
+  ],
+  "brand_names": [
+    "Phenytoin Sodium"
+  ],
+  "manufacturer_names": [
+    "Hikma Pharmaceuticals USA Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "INTRAMUSCULAR",
+    "INTRAVENOUS"
+  ],
+  "rxcui": [
+    "1670351",
+    "1670353"
+  ],
+  "spl_id": "1b68e42c-ebb1-4798-adba-712a41cd1cf4",
+  "spl_set_id": "035a8d4e-2063-4240-83cb-d7eebcabe301",
+  "effective_time": "20240409",
+  "fetched_at": "2026-05-02T20:51:45.769904Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

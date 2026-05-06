@@ -1,0 +1,30 @@
+{
+  "drug_query": "insulin glargine",
+  "generic_names": [
+    "INSULIN GLARGINE"
+  ],
+  "brand_names": [
+    "BASAGLAR KwikPen",
+    "BASAGLAR Tempo Pen"
+  ],
+  "manufacturer_names": [
+    "Eli Lilly and Company"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "SUBCUTANEOUS"
+  ],
+  "rxcui": [
+    "847230",
+    "1736863",
+    "2268064",
+    "2268065"
+  ],
+  "spl_id": "3c2283e6-2844-44d2-a447-579b07e77c27",
+  "spl_set_id": "0ad21db3-2b1c-4ed9-a687-bdd6a74d0aae",
+  "effective_time": "20251211",
+  "fetched_at": "2026-05-02T20:48:33.744203Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

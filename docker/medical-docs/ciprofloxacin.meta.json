@@ -1,0 +1,26 @@
+{
+  "drug_query": "ciprofloxacin",
+  "generic_names": [
+    "CIPROFLOXACIN"
+  ],
+  "brand_names": [
+    "ciprofloxacin"
+  ],
+  "manufacturer_names": [
+    "Proficient Rx LP"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "OPHTHALMIC"
+  ],
+  "rxcui": [
+    "309307"
+  ],
+  "spl_id": "a797de06-c8be-4417-9bac-137dc4931c8b",
+  "spl_set_id": "05b2836d-cd3d-4d7f-970c-66ec2d788667",
+  "effective_time": "20220502",
+  "fetched_at": "2026-05-02T20:49:47.160865Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

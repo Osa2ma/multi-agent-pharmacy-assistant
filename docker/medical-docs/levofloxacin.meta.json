@@ -1,0 +1,26 @@
+{
+  "drug_query": "levofloxacin",
+  "generic_names": [
+    "LEVOFLOXACIN"
+  ],
+  "brand_names": [
+    "Levofloxacin"
+  ],
+  "manufacturer_names": [
+    "NuCare Pharmaceuticals,Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "199885"
+  ],
+  "spl_id": "2f8911a1-ac9b-6c6c-e063-6394a90a7ac5",
+  "spl_set_id": "05d179f5-b200-8597-e063-6394a90a10cc",
+  "effective_time": "20250304",
+  "fetched_at": "2026-05-02T20:49:48.923084Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

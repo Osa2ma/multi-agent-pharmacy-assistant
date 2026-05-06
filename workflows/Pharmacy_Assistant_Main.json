@@ -1,0 +1,3341 @@
+{
+  "name": "Pharmacy_Assistant_Main",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pharmacy-query",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2816,
+        -352
+      ],
+      "id": "510283f6-983b-4efc-beda-e5d089f22996",
+      "name": "Webhook",
+      "webhookId": "471d5525-65a2-41da-a373-3ca2e5020e30"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO query_audit (request_id, session_id, user_query, user_context)\n  VALUES ($1::uuid, $2::uuid, $3, $4::jsonb)\n  RETURNING request_id, session_id, timestamp;",
+        "options": {
+          "queryReplacement": "={{ [ $json.request_id, $json.session_id, $json.user_query, JSON.stringify($json.user_context) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2384,
+        -352
+      ],
+      "id": "248bb114-c021-4a7c-a950-ee1388258d60",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.item.json;\nconst query = data.user_query.toLowerCase();\n\n// =========================================================================\n// CRISIS PATTERNS - self-harm or suicidal ideation\n// These get redirected to crisis resources, NOT just blocked.\n// =========================================================================\nconst crisisPatterns = [\n    /\\b(kill|end|hurt)\\s+(myself|my\\s*self)/i,\n    /\\b(commit|attempt)\\s+suicide/i,\n    /\\bdon'?t\\s+want\\s+to\\s+(live|be\\s+alive|exist)/i,\n    /\\bsuicid(al|e)/i,\n    /\\bself[-\\s]?harm/i,\n    /\\bend\\s+(my|it\\s+all|everything)/i,\n    /\\btake\\s+my\\s+(own\\s+)?life/i\n];\n\n// =========================================================================\n// HARD BLOCK PATTERNS - overdose, harm, malicious intent\n// These get refused outright.\n// =========================================================================\nconst hardBlockPatterns = [\n    /\\b(how\\s+(much|many|to))\\s.*\\b(overdose|kill|lethal|fatal)/i,\n    /\\blethal\\s+dose/i,\n    /\\bmaximum\\s+(dose|amount)\\s+(before|to)\\s+(die|death|kill)/i,\n    /\\bhow\\s+to\\s+(poison|kill|harm|hurt)\\s+(someone|him|her|them)/i,\n    /\\b(make|create|synthesize)\\s+.*(poison|toxin|drug|narcotic)/i,\n    /\\bget\\s+high\\s+(on|from|with)/i,\n    /\\babuse\\s+(this|the)\\s+(drug|medication|medicine)/i\n];\n\n// =========================================================================\n// EVALUATION\n// Crisis check FIRST - if both crisis and block patterns match, crisis wins\n// =========================================================================\nlet verdict = 'allow';\nlet reason = null;\nlet matchedPattern = null;\n\nfor (const pattern of crisisPatterns) {\n    if (pattern.test(query)) {\n        verdict = 'crisis_redirect';\n        reason = 'self_harm_indicators';\n        matchedPattern = pattern.source;\n        break;\n    }\n}\n\nif (verdict === 'allow') {\n    for (const pattern of hardBlockPatterns) {\n        if (pattern.test(query)) {\n            verdict = 'block';\n            reason = 'overdose_or_harm_query';\n            matchedPattern = pattern.source;\n            break;\n        }\n    }\n}\n\nreturn {\n    json: {\n        ...data,\n        pre_filter: {\n            verdict: verdict,\n            reason: reason,\n            matched_pattern: matchedPattern\n        }\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1968,
+        -352
+      ],
+      "id": "27277123-90c3-4cde-b389-41b38801faf8",
+      "name": "Pre-Filter"
+    },
+    {
+      "parameters": {
+        "jsCode": "// The Postgres RETURNING gave us confirmed UUIDs.\n// We need to combine that with the data from the Validate Input node.\n\nconst auditConfirmation = $input.item.json;  // from Postgres\nconst validatedData = $('Validate Input').item.json;  // from earlier node\n\nreturn {\n    json: {\n        request_id: auditConfirmation.request_id,\n        session_id: auditConfirmation.session_id,\n        user_query: validatedData.user_query,\n        user_context: validatedData.user_context,\n        audit_created_at: auditConfirmation.timestamp\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2176,
+        -352
+      ],
+      "id": "a2dd8fd6-7430-4d9f-a074-3fd90d57a9e3",
+      "name": "Carry Forward"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.item.json.body || $input.item.json;\n\n// Validate the user query exists\nif (!body.user_query || typeof body.user_query !== 'string' || !body.user_query.trim()) {\n    throw new Error('Missing or empty user_query in request body');\n}\n\n// Trim and length-limit the query\nconst userQuery = body.user_query.trim().substring(0, 2000);\n\n// Generate UUIDs if not provided\nfunction generateUUID() {\n    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n        const r = Math.random() * 16 | 0;\n        const v = c === 'x' ? r : (r & 0x3 | 0x8);\n        return v.toString(16);\n    });\n}\n\nconst requestId = generateUUID();\nconst sessionId = body.session_id || generateUUID();\n\n// Sanitize and structure user context\nconst userContext = body.user_context || {};\nconst cleanContext = {\n    age: typeof userContext.age === 'number' ? userContext.age : null,\n    known_conditions: Array.isArray(userContext.known_conditions) ? userContext.known_conditions : [],\n    current_medications: Array.isArray(userContext.current_medications) ? userContext.current_medications : [],\n    role: ['patient', 'pharmacist', 'physician'].includes(userContext.role) ? userContext.role : 'patient'\n};\n\nreturn {\n    json: {\n        request_id: requestId,\n        session_id: sessionId,\n        user_query: userQuery,\n        user_context: cleanContext,\n        received_at: new Date().toISOString()\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2592,
+        -352
+      ],
+      "id": "74adfd4e-adac-4c9f-90ec-3213e8b15acf",
+      "name": "Validate Input"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.pre_filter.verdict }}",
+                    "rightValue": "block",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5b559acd-3b50-4af0-b7e7-4882c3c12c23"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d688041c-b6fc-45bd-9c9b-59a13e70f019",
+                    "leftValue": "={{ $json.pre_filter.verdict }}",
+                    "rightValue": "crisis_redirect",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "9db81f4d-11e2-42a0-87c4-447a457face0",
+                    "leftValue": "={{ $json.pre_filter.verdict }}",
+                    "rightValue": "allow",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1792,
+        -240
+      ],
+      "id": "af1c3955-aaf4-4f55-961f-93bf0ee7e48d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25c43a3c-cc06-4149-8c5c-646bbac74bb6",
+              "name": "request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f5babebd-ed8a-415d-aebd-a5fbba3ef6ed",
+              "name": "step_name",
+              "value": "pre_filter_verdict",
+              "type": "string"
+            },
+            {
+              "id": "296b5355-67a9-4093-b9bc-9718f509d2fc",
+              "name": "step_data",
+              "value": "crisis_redirect",
+              "type": "string"
+            },
+            {
+              "id": "db4c4d11-b589-4e8a-96a2-c470455e82a8",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1536,
+        -208
+      ],
+      "id": "95b7ffe9-0888-426e-96dd-88ec7a6132bd",
+      "name": "Prepare Crisis Audit"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "efb94da9-0133-4db4-8413-24e85385bf22",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "6bca5991-ffa5-4456-a89b-4e0d71e2c36e",
+              "name": "step_name",
+              "value": "pre_filter_verdict",
+              "type": "string"
+            },
+            {
+              "id": "b0b39687-7e7f-45c8-aa85-72b5da03fdea",
+              "name": "step_data",
+              "value": "allow",
+              "type": "string"
+            },
+            {
+              "id": "85e14482-08b3-4c73-b9fb-581afa5a3fd1",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        32
+      ],
+      "id": "e20d2ae8-517d-4d7c-868a-f3c2ceb594fc",
+      "name": "Prepare Allow Audit"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7b192bfd-99b9-44b9-bc91-f4241aa8243c",
+              "name": "request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e80d4c2e-76fb-4946-80ec-433a32515876",
+              "name": "step_name",
+              "value": "pre_filter_verdict",
+              "type": "string"
+            },
+            {
+              "id": "18e991f8-3131-4b67-89d0-1f875958158e",
+              "name": "step_data",
+              "value": "=block: {{ $json.pre_filter.reason }}",
+              "type": "string"
+            },
+            {
+              "id": "630fc315-183d-4e57-bfa3-8dba1de95626",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1552,
+        -496
+      ],
+      "id": "b2bc9bbb-3bb0-48ca-8ff7-1c38d3c7d2c6",
+      "name": "Prepare Block Audit"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1344,
+        -400
+      ],
+      "id": "192af8a9-f4f8-4a1e-b6a2-9c7974ba6506",
+      "name": "Call Audit_Logger Block"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  request_id: $('Pre-Filter').item.json.request_id,\n  status: \"refused\",\n  response: \"I'm not able to help with this request. If you have a legitimate medical question, please rephrase it or consult a licensed pharmacist or physician.\",\n  disclaimer: \"This system provides medication information only and does not provide medical advice.\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1136,
+        -384
+      ],
+      "id": "c5a9c4f2-f0d0-4095-92df-ec0b6002f877",
+      "name": "Respond Block"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1328,
+        -192
+      ],
+      "id": "a93b3809-83cb-4a85-bc58-3ad29acc609e",
+      "name": "Call Audit_Logger Crisis"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  request_id: $('Pre-Filter').item.json.request_id,\n  status: \"crisis_resources\",\n  response: \"I'm concerned about what you're describing. Please reach out to someone who can help right now.\\n\\nIn Egypt, you can contact:\\n- Befrienders Cairo: +20 (0)2 27621602 or +20 (0)2 27621603\\n- Emergency services: 123\\n\\nIf you're in immediate danger, please go to the nearest emergency department.\\n\\nYou matter, and help is available.\",\n  is_crisis_response: true\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1120,
+        -192
+      ],
+      "id": "68121cff-4ed5-4eda-8d8d-157358e3037e",
+      "name": "Respond Crisis"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1456,
+        32
+      ],
+      "id": "aff8b53b-cafd-429d-8369-d22048515161",
+      "name": "Call Audit_Logger Allow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "780fc255-9db5-4dd4-a7c0-70f1830ee45f",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "722368fe-cdb4-4f74-8cef-5c5572e83ec1",
+              "name": "step_name",
+              "value": "query_classification",
+              "type": "string"
+            },
+            {
+              "id": "34fab1a1-081a-4e9a-bc85-1127d6d61fe1",
+              "name": "=step_data",
+              "value": "={{ JSON.stringify($json.classification) }}",
+              "type": "string"
+            },
+            {
+              "id": "a14842de-8f43-446d-9c62-5a3a7eccf907",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -832,
+        32
+      ],
+      "id": "dec65abe-5698-4f1f-9b68-b8099b4dd467",
+      "name": "Prepare Classification Audit"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "message",
+              "value": "=Classify this medical query: \"{{ $('Carry Forward').item.json.user_query }}\"  User context: {{ JSON.stringify($('Carry Forward').item.json.user_context) }}  Return ONLY a JSON object, no other text, no markdown, no code blocks. The JSON must have exactly this structure: {\"category\": \"DRUG_INFO\" or \"DRUG_INTERACTION\" or \"DOSAGE_QUESTION\" or \"SAFETY_CONCERN\" or \"OUT_OF_SCOPE\", \"confidence\": 0.0, \"drugs_mentioned\": [], \"requires_patient_context\": false, \"urgency\": \"routine\" or \"elevated\" or \"urgent\"}  Category definitions: - DRUG_INFO: Single-drug questions about uses, mechanism, side effects, general dosing - DRUG_INTERACTION: Two or more drugs/foods/supplements taken together - DOSAGE_QUESTION: Specific dose amounts, timing, missed doses, dose adjustments - SAFETY_CONCERN: Symptoms, adverse effects, accidental ingestion, allergic reactions - OUT_OF_SCOPE: Non-medical, diagnostic requests, prescription requests, or jokes  Urgency levels: - routine: General information requests - elevated: Specific patient situation requiring care but not immediate - urgent: Active symptoms, possible overdose, allergic reaction, or life-threatening concern  Field requirements: - drugs_mentioned: array of lowercase generic drug names mentioned in the query, empty array if none - confidence: float between 0.0 and 1.0 indicating certainty in the category - requires_patient_context: true if the answer depends on patient age, conditions, or other medications"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a medical query classifier. You output only valid JSON, no commentary, no markdown formatting."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1264,
+        32
+      ],
+      "id": "09cc201d-186b-45f8-891d-8f5f7ffe2b4d",
+      "name": "Classifier Agent",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\n\n// Extract the text response from Cohere's response structure\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('LLM returned empty response. Full response: ' + JSON.stringify(llmResponse));\n}\n\n// LLMs sometimes wrap JSON in markdown code blocks despite instructions.\n// Strip ```json and ``` if present.\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet classification;\ntry {\n    classification = JSON.parse(cleanText);\n} catch (e) {\n    throw new Error(`Failed to parse classifier output as JSON. Raw text: ${rawText}`);\n}\n\n// Validate the response shape\nconst validCategories = ['DRUG_INFO', 'DRUG_INTERACTION', 'DOSAGE_QUESTION', 'SAFETY_CONCERN', 'OUT_OF_SCOPE'];\nconst validUrgencies = ['routine', 'elevated', 'urgent'];\n\nif (!validCategories.includes(classification.category)) {\n    classification.category = 'OUT_OF_SCOPE';\n    classification._validation_warning = 'Category was invalid, defaulted to OUT_OF_SCOPE';\n}\n\nif (!validUrgencies.includes(classification.urgency)) {\n    classification.urgency = 'routine';\n}\n\nif (typeof classification.confidence !== 'number' || classification.confidence < 0 || classification.confidence > 1) {\n    classification.confidence = 0.5;\n}\n\nif (!Array.isArray(classification.drugs_mentioned)) {\n    classification.drugs_mentioned = [];\n}\n\n// Normalize drug names to lowercase\n// Common drug name synonyms - international names → US generic names\n// (US generic is what OpenFDA / DailyMed uses)\nconst DRUG_SYNONYMS = {\n    'paracetamol': 'acetaminophen',\n    'adrenaline': 'epinephrine',\n    'noradrenaline': 'norepinephrine',\n    'salbutamol': 'albuterol',\n    'frusemide': 'furosemide',\n    'glibenclamide': 'glyburide',\n    'lignocaine': 'lidocaine',\n    'dipyrone': 'metamizole',\n    'augmentin': 'amoxicillin and clavulanate',\n    'panadol': 'acetaminophen',\n    'tylenol': 'acetaminophen',\n    'advil': 'ibuprofen',\n    'motrin': 'ibuprofen',\n    'aspirin': 'aspirin',\n    'voltaren': 'diclofenac',\n    'cataflam': 'diclofenac',\n    'brufen': 'ibuprofen',\n    'nurofen': 'ibuprofen',\n    'buscopan': 'hyoscine butylbromide',\n    'flagyl': 'metronidazole',\n    'zithromax': 'azithromycin',\n    'zovirax': 'acyclovir',\n    'crestor': 'rosuvastatin',\n    'lipitor': 'atorvastatin',\n    'norvasc': 'amlodipine',\n    'glucophage': 'metformin',\n    'coumadin': 'warfarin',\n    'plavix': 'clopidogrel',\n    'lasix': 'furosemide',\n    'prilosec': 'omeprazole',\n    'losec': 'omeprazole',\n    'nexium': 'esomeprazole',\n    'concor': 'bisoprolol',\n    'tenormin': 'atenolol'\n};\n\n// Normalize drug names: lowercase, trim, then apply synonyms\nclassification.drugs_mentioned = classification.drugs_mentioned\n    .map(d => typeof d === 'string' ? d.toLowerCase().trim() : '')\n    .filter(d => d.length > 0)\n    .map(d => DRUG_SYNONYMS[d] || d);  // map to canonical name if known synonym\n\n// Track the original names too for citation purposes\nclassification._original_drugs_mentioned = $input.item.json.classification?.drugs_mentioned || [];\n\nif (typeof classification.requires_patient_context !== 'boolean') {\n    classification.requires_patient_context = false;\n}\n\n// Bring forward the original request context\nconst requestId = $('Carry Forward').item.json.request_id;\nconst userQuery = $('Carry Forward').item.json.user_query;\nconst userContext = $('Carry Forward').item.json.user_context;\n\nreturn {\n    json: {\n        request_id: requestId,\n        user_query: userQuery,\n        user_context: userContext,\n        classification: classification,\n        raw_llm_response: rawText  // keep for audit/debugging\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1072,
+        48
+      ],
+      "id": "a25b7876-7366-4fa3-8608-ef5ae4f59743",
+      "name": "Parse Classification"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  request_id: $('Carry Forward').first().json.request_id,\n  status: \"out_of_scope\",\n  classification: $('Parse Classification').first().json.classification,\n  response: \"I can only help with questions about specific medications — what they're used for, how they interact, dosing, and safety information. For prescriptions, diagnoses, or general medical advice, please consult a licensed pharmacist or physician.\",\n  user_query: $('Carry Forward').first().json.user_query\n}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -320,
+        352
+      ],
+      "id": "9e4d17a2-1371-4783-ac26-3fd544ecf91c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ab57c85-c0fb-4257-8ea6-e597a5971cc9",
+              "name": "=request_id",
+              "value": "={{ $('Carry Forward').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f7016711-d64b-4be1-b139-03c00dad4e62",
+              "name": "user_query",
+              "value": "={{ $('Carry Forward').item.json.user_query }}",
+              "type": "string"
+            },
+            {
+              "id": "64f48dbc-1dfb-4f03-98c9-791f3e709e3c",
+              "name": "user_context",
+              "value": "={{ $('Carry Forward').item.json.user_context }}",
+              "type": "string"
+            },
+            {
+              "id": "fc975d39-2278-47a4-b6e5-8887dc230b79",
+              "name": "classification",
+              "value": "={{ $('Parse Classification').item.json.classification }}",
+              "type": "string"
+            },
+            {
+              "id": "3bd64b4c-70f7-4e2b-9e6e-3ca7e0055c75",
+              "name": "drugs_filter",
+              "value": "={{ $('Parse Classification').item.json.classification.drugs_mentioned.join(',') }}",
+              "type": "string"
+            },
+            {
+              "id": "4ee74015-8c21-493f-8852-f3a15b60265a",
+              "name": "query_category",
+              "value": "DRUG_INFO",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        -528
+      ],
+      "id": "9e25b94b-848c-4292-a444-df683c8b46e0",
+      "name": "Prepare DRUG_INFO Query"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    id,\n    text AS chunk_content,\n    metadata->>'drug_name' AS drug_name,\n    metadata->>'section' AS section,\n    metadata->>'brand_names' AS brand_names,\n    metadata->>'rxcui' AS rxcui,\n    embedding <=> $1::vector AS distance\nFROM pharmacy_knowledge\nWHERE \n    CASE \n        WHEN $2 != '' THEN metadata->>'drug_name' = ANY(string_to_array($2, ','))\n        ELSE TRUE\n    END\nORDER BY embedding <=> $1::vector ASC\nLIMIT 5;",
+        "options": {
+          "queryReplacement": "={{ '[' + $('Embed Query DRUG_INFO').item.json.embeddings[0].join(',') + ']' }}, ={{ $('Prepare DRUG_INFO Query').item.json.drugs_filter }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        64,
+        -928
+      ],
+      "id": "097aacff-bfcf-4da2-b349-fa1074c98447",
+      "name": "Vector Search DRUG_INFO",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/embed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=texts",
+              "value": "={{ [$json.user_query] }}"
+            },
+            {
+              "name": "model",
+              "value": "embed-multilingual-v3.0"
+            },
+            {
+              "name": "input_type",
+              "value": "search_query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -80,
+        -768
+      ],
+      "id": "0a74b662-d301-4609-8ad3-b16dddc21b28",
+      "name": "Embed Query DRUG_INFO",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst retrievedChunks = items.map(item => item.json);\n\n// Bring forward the original query data\nconst queryData = $('Prepare DRUG_INFO Query').item.json;\n\n// Format chunks into a clean context string for downstream agents\nconst formattedContext = retrievedChunks\n    .map((chunk, idx) => {\n        return `[Source ${idx + 1}: ${chunk.drug_name} - ${chunk.section}]\\n${chunk.chunk_content}\\n`;\n    })\n    .join('\\n---\\n');\n\n// Build a citation-ready summary\nconst sources = retrievedChunks.map(chunk => ({\n    drug_name: chunk.drug_name,\n    section: chunk.section,\n    brand_names: chunk.brand_names,\n    rxcui: chunk.rxcui,\n    distance: parseFloat(chunk.distance)\n}));\n\nreturn {\n    json: {\n        request_id: queryData.request_id,\n        user_query: queryData.user_query,\n        user_context: queryData.user_context,\n        classification: queryData.classification,\n        query_category: queryData.query_category,\n        rag_context: formattedContext,\n        rag_sources: sources,\n        rag_chunk_count: retrievedChunks.length\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -928
+      ],
+      "id": "42ebd17b-0bf2-4f3a-81df-fc24143f302f",
+      "name": "Format DRUG_INFO Context"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9bb04b1-4734-44d7-9cd5-0416ede27ec7",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "df9bb11d-eeee-4a94-9153-1426432ef25f",
+              "name": "step_name",
+              "value": "rag_documents_retrieved",
+              "type": "string"
+            },
+            {
+              "id": "e60603ab-65ba-48a6-8f5d-e57fb7316a68",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.rag_sources) }}",
+              "type": "string"
+            },
+            {
+              "id": "84dd70e6-40a9-4bc3-80c5-f702f383e33e",
+              "name": "=error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -896
+      ],
+      "id": "efbc3efb-9ce2-4f8b-847f-f9d778b16a49",
+      "name": "Prepare RAG Audit DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        -1008
+      ],
+      "id": "5f208e34-2928-45d0-8d4e-e27007cc241c",
+      "name": "Call Audit_Logger RAG DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ab57c85-c0fb-4257-8ea6-e597a5971cc9",
+              "name": "=request_id",
+              "value": "={{ $('Carry Forward').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f7016711-d64b-4be1-b139-03c00dad4e62",
+              "name": "user_query",
+              "value": "={{ $('Carry Forward').item.json.user_query }}",
+              "type": "string"
+            },
+            {
+              "id": "64f48dbc-1dfb-4f03-98c9-791f3e709e3c",
+              "name": "user_context",
+              "value": "={{ $('Carry Forward').item.json.user_context }}",
+              "type": "string"
+            },
+            {
+              "id": "fc975d39-2278-47a4-b6e5-8887dc230b79",
+              "name": "classification",
+              "value": "={{ $('Parse Classification').item.json.classification }}",
+              "type": "string"
+            },
+            {
+              "id": "3bd64b4c-70f7-4e2b-9e6e-3ca7e0055c75",
+              "name": "drugs_filter",
+              "value": "={{ $('Parse Classification').item.json.classification.drugs_mentioned.join(',') }}",
+              "type": "string"
+            },
+            {
+              "id": "4ee74015-8c21-493f-8852-f3a15b60265a",
+              "name": "query_category",
+              "value": "DRUG_INTERACTION",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        -384
+      ],
+      "id": "8039fff6-d972-44d6-beb3-faf31a5da691",
+      "name": "Prepare DRUG_INTERACTION Query"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/embed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=texts",
+              "value": "={{ [$json.user_query] }}"
+            },
+            {
+              "name": "model",
+              "value": "embed-multilingual-v3.0"
+            },
+            {
+              "name": "input_type",
+              "value": "search_query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        -496
+      ],
+      "id": "e056d835-b142-416c-806a-1484bcdc9310",
+      "name": "Embed Query DRUG_INTERACTION",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    id,\n    text AS chunk_content,\n    metadata->>'drug_name' AS drug_name,\n    metadata->>'section' AS section,\n    metadata->>'brand_names' AS brand_names,\n    metadata->>'rxcui' AS rxcui,\n    embedding <=> $1::vector AS distance,\n    CASE \n        WHEN metadata->>'section' = 'drug_interactions' THEN 0.0\n        WHEN metadata->>'section' IN ('warnings_and_cautions', 'contraindications') THEN 0.05\n        ELSE 0.15\n    END AS section_penalty\nFROM pharmacy_knowledge\nWHERE \n    CASE \n        WHEN $2 != '' THEN metadata->>'drug_name' = ANY(string_to_array($2, ','))\n        ELSE TRUE\n    END\nORDER BY (embedding <=> $1::vector) + \n    CASE \n        WHEN metadata->>'section' = 'drug_interactions' THEN 0.0\n        WHEN metadata->>'section' IN ('warnings_and_cautions', 'contraindications') THEN 0.05\n        ELSE 0.15\n    END ASC\nLIMIT 8;",
+        "options": {
+          "queryReplacement": "={{ '[' + $('Embed Query DRUG_INTERACTION').item.json.embeddings[0].join(',') + ']' }}, ={{ $('Prepare DRUG_INTERACTION Query').item.json.drugs_filter }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        -528
+      ],
+      "id": "56951abc-0aa2-432a-99c5-129727129b26",
+      "name": "Vector Search DRUG_INTERACTION",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst retrievedChunks = items.map(item => item.json);\n\n// Bring forward the original query data using .first() instead of .item\nconst queryData = $('Prepare DRUG_INTERACTION Query').first().json;\n\n// Format chunks into a clean context string for downstream agents\nconst formattedContext = retrievedChunks\n    .map((chunk, idx) => {\n        return `[Source ${idx + 1}: ${chunk.drug_name} - ${chunk.section}]\\n${chunk.chunk_content}\\n`;\n    })\n    .join('\\n---\\n');\n\n// Build a citation-ready summary\nconst sources = retrievedChunks.map(chunk => ({\n    drug_name: chunk.drug_name,\n    section: chunk.section,\n    brand_names: chunk.brand_names,\n    rxcui: chunk.rxcui,\n    distance: parseFloat(chunk.distance)\n}));\n\n// Return must be wrapped in an array for \"Run Once for All Items\" mode\nreturn [{\n    json: {\n        request_id: queryData.request_id,\n        user_query: queryData.user_query,\n        user_context: queryData.user_context,\n        classification: queryData.classification,\n        query_category: queryData.query_category,\n        rag_context: formattedContext,\n        rag_sources: sources,\n        rag_chunk_count: retrievedChunks.length\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        -528
+      ],
+      "id": "e70c75e7-c6cd-445f-8cf7-e49c38f60bdf",
+      "name": "Format DRUG_INTERACTION Context"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9bb04b1-4734-44d7-9cd5-0416ede27ec7",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "df9bb11d-eeee-4a94-9153-1426432ef25f",
+              "name": "step_name",
+              "value": "rag_documents_retrieved",
+              "type": "string"
+            },
+            {
+              "id": "e60603ab-65ba-48a6-8f5d-e57fb7316a68",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.rag_sources) }}",
+              "type": "string"
+            },
+            {
+              "id": "84dd70e6-40a9-4bc3-80c5-f702f383e33e",
+              "name": "=error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        -512
+      ],
+      "id": "e32d4e20-7bdc-49c9-a210-2c2c577161eb",
+      "name": "Prepare RAG Audit DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        -528
+      ],
+      "id": "4b009f7a-70e2-4017-9659-25385b562354",
+      "name": "Call Audit_Logger RAG DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ab57c85-c0fb-4257-8ea6-e597a5971cc9",
+              "name": "=request_id",
+              "value": "={{ $('Carry Forward').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f7016711-d64b-4be1-b139-03c00dad4e62",
+              "name": "user_query",
+              "value": "={{ $('Carry Forward').item.json.user_query }}",
+              "type": "string"
+            },
+            {
+              "id": "64f48dbc-1dfb-4f03-98c9-791f3e709e3c",
+              "name": "user_context",
+              "value": "={{ $('Carry Forward').item.json.user_context }}",
+              "type": "string"
+            },
+            {
+              "id": "fc975d39-2278-47a4-b6e5-8887dc230b79",
+              "name": "classification",
+              "value": "={{ $('Parse Classification').item.json.classification }}",
+              "type": "string"
+            },
+            {
+              "id": "3bd64b4c-70f7-4e2b-9e6e-3ca7e0055c75",
+              "name": "drugs_filter",
+              "value": "={{ $('Parse Classification').item.json.classification.drugs_mentioned.join(',') }}",
+              "type": "string"
+            },
+            {
+              "id": "4ee74015-8c21-493f-8852-f3a15b60265a",
+              "name": "query_category",
+              "value": "DRUG_INTERACTION",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -64,
+        -144
+      ],
+      "id": "e96a2d99-d251-4dbe-84fe-2315befffa03",
+      "name": "Prepare DOSAGE_QUESTION Query"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/embed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=texts",
+              "value": "={{ [$json.user_query] }}"
+            },
+            {
+              "name": "model",
+              "value": "embed-multilingual-v3.0"
+            },
+            {
+              "name": "input_type",
+              "value": "search_query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        224,
+        -256
+      ],
+      "id": "fb6f5600-5af8-4b32-ac09-61b1e394ad79",
+      "name": "Embed Query DOSAGE_QUESTION",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    id,\n    text AS chunk_content,\n    metadata->>'drug_name' AS drug_name,\n    metadata->>'section' AS section,\n    metadata->>'brand_names' AS brand_names,\n    metadata->>'rxcui' AS rxcui,\n    embedding <=> $1::vector AS distance\nFROM pharmacy_knowledge\nWHERE \n    CASE \n        WHEN $2 != '' THEN metadata->>'drug_name' = ANY(string_to_array($2, ','))\n        ELSE TRUE\n    END\nORDER BY (embedding <=> $1::vector) + \n    CASE \n        WHEN metadata->>'section' IN ('dosage_and_administration', 'dosage_forms_and_strengths') THEN 0.0\n        WHEN metadata->>'section' IN ('use_in_specific_populations', 'pediatric_use', 'geriatric_use', 'pregnancy') THEN 0.05\n        WHEN metadata->>'section' = 'overdosage' THEN 0.05\n        ELSE 0.15\n    END ASC\nLIMIT 6;",
+        "options": {
+          "queryReplacement": "={{ '[' + $('Embed Query DOSAGE_QUESTION').item.json.embeddings[0].join(',') + ']' }}, {{ $('Prepare DOSAGE_QUESTION Query').item.json.drugs_filter }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        560,
+        -288
+      ],
+      "id": "9079d090-eec2-4704-9d78-2dd49974647c",
+      "name": "Vector Search DOSAGE_QUESTION",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst retrievedChunks = items.map(item => item.json);\n\n// Use .first() instead of .item to prevent index errors\nconst queryData = $('Prepare DOSAGE_QUESTION Query').first().json;\n\n// Format chunks into a clean context string for downstream agents\nconst formattedContext = retrievedChunks\n    .map((chunk, idx) => {\n        return `[Source ${idx + 1}: ${chunk.drug_name} - ${chunk.section}]\\n${chunk.chunk_content}\\n`;\n    })\n    .join('\\n---\\n');\n\n// Build a citation-ready summary\nconst sources = retrievedChunks.map(chunk => ({\n    drug_name: chunk.drug_name,\n    section: chunk.section,\n    brand_names: chunk.brand_names,\n    rxcui: chunk.rxcui,\n    distance: parseFloat(chunk.distance)\n}));\n\n// Wrap the return object in an array []\nreturn [{\n    json: {\n        request_id: queryData.request_id,\n        user_query: queryData.user_query,\n        user_context: queryData.user_context,\n        classification: queryData.classification,\n        query_category: queryData.query_category,\n        rag_context: formattedContext,\n        rag_sources: sources,\n        rag_chunk_count: retrievedChunks.length\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        -288
+      ],
+      "id": "47d19292-305b-4d36-821b-22da4efb72cc",
+      "name": "Format DOSAGE_QUESTION Context"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1456,
+        -288
+      ],
+      "id": "184cc742-924f-4cba-a376-6404f2bd4c36",
+      "name": "Call Audit_Logger RAG DOSAGE_QUESTION1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9bb04b1-4734-44d7-9cd5-0416ede27ec7",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "df9bb11d-eeee-4a94-9153-1426432ef25f",
+              "name": "step_name",
+              "value": "rag_documents_retrieved",
+              "type": "string"
+            },
+            {
+              "id": "e60603ab-65ba-48a6-8f5d-e57fb7316a68",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.rag_sources) }}",
+              "type": "string"
+            },
+            {
+              "id": "84dd70e6-40a9-4bc3-80c5-f702f383e33e",
+              "name": "=error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        -272
+      ],
+      "id": "f700d11d-7023-4a52-b899-5e3f1a677922",
+      "name": "Prepare RAG Audit DOSAGE_QUESTION"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  request_id: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.request_id,\n  status: \"completed\",\n  category: \"DOSAGE_QUESTION\",\n  user_query: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.user_query,\n  response: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.final_response.answer,\n  key_takeaway: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.final_response.key_takeaway,\n  confidence: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.final_response.confidence,\n  sources_cited: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.final_response.sources_cited,\n  recommend_professional_consultation: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.final_response.recommend_professional_consultation,\n  rag_sources: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.rag_sources,\n  safety_verdict: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.safety_verdict,\n  safety_issues: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.safety_issues,\n  disclaimer: \"This information is for educational purposes only and is not a substitute for professional medical advice. Always consult your pharmacist or physician.\"\n}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3280,
+        -288
+      ],
+      "id": "56003708-7006-42ad-b8e4-01e725e6160c",
+      "name": "Respond DOSAGE_QUESTION"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  request_id: $('Parse Safety Verdict DRUG_INTERACTION').item.json.request_id,\n  status: \"completed\",\n  category: \"DRUG_INTERACTION\",\n  user_query: $('Parse Safety Verdict DRUG_INTERACTION').item.json.user_query,\n  response: $('Parse Safety Verdict DRUG_INTERACTION').item.json.final_response.answer,\n  key_takeaway: $('Parse Safety Verdict DRUG_INTERACTION').item.json.final_response.key_takeaway,\n  confidence: $('Parse Safety Verdict DRUG_INTERACTION').item.json.final_response.confidence,\n  sources_cited: $('Parse Safety Verdict DRUG_INTERACTION').item.json.final_response.sources_cited,\n  recommend_professional_consultation: $('Parse Safety Verdict DRUG_INTERACTION').item.json.final_response.recommend_professional_consultation,\n  rag_sources: $('Parse Safety Verdict DRUG_INTERACTION').item.json.rag_sources,\n  safety_verdict: $('Parse Safety Verdict DRUG_INTERACTION').item.json.safety_verdict,\n  safety_issues: $('Parse Safety Verdict DRUG_INTERACTION').item.json.safety_issues,\n  disclaimer: \"This information is for educational purposes only and is not a substitute for professional medical advice. Always consult your pharmacist or physician.\"\n}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3152,
+        -576
+      ],
+      "id": "9d4b01be-a941-45ff-b9d9-e248bf596cca",
+      "name": "Respond DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  request_id: $('Parse Safety Verdict DRUG_INFO').item.json.request_id,\n  status: \"completed\",\n  category: \"DRUG_INFO\",\n  user_query: $('Parse Safety Verdict DRUG_INFO').item.json.user_query,\n  response: $('Parse Safety Verdict DRUG_INFO').item.json.final_response.answer,\n  key_takeaway: $('Parse Safety Verdict DRUG_INFO').item.json.final_response.key_takeaway,\n  confidence: $('Parse Safety Verdict DRUG_INFO').item.json.final_response.confidence,\n  sources_cited: $('Parse Safety Verdict DRUG_INFO').item.json.final_response.sources_cited,\n  recommend_professional_consultation: $('Parse Safety Verdict DRUG_INFO').item.json.final_response.recommend_professional_consultation,\n  rag_sources: $('Parse Safety Verdict DRUG_INFO').item.json.rag_sources,\n  safety_verdict: $('Parse Safety Verdict DRUG_INFO').item.json.safety_verdict,\n  safety_issues: $('Parse Safety Verdict DRUG_INFO').item.json.safety_issues,\n  disclaimer: \"This information is for educational purposes only and is not a substitute for professional medical advice. Always consult your pharmacist or physician.\"\n}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2336,
+        -992
+      ],
+      "id": "9e1a0598-8aa2-4359-8173-c8eb8708dde0",
+      "name": "Respond DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ab57c85-c0fb-4257-8ea6-e597a5971cc9",
+              "name": "=request_id",
+              "value": "={{ $('Carry Forward').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f7016711-d64b-4be1-b139-03c00dad4e62",
+              "name": "user_query",
+              "value": "={{ $('Carry Forward').item.json.user_query }}",
+              "type": "string"
+            },
+            {
+              "id": "64f48dbc-1dfb-4f03-98c9-791f3e709e3c",
+              "name": "user_context",
+              "value": "={{ $('Carry Forward').item.json.user_context }}",
+              "type": "string"
+            },
+            {
+              "id": "fc975d39-2278-47a4-b6e5-8887dc230b79",
+              "name": "classification",
+              "value": "={{ $('Parse Classification').item.json.classification }}",
+              "type": "string"
+            },
+            {
+              "id": "3bd64b4c-70f7-4e2b-9e6e-3ca7e0055c75",
+              "name": "drugs_filter",
+              "value": "={{ $('Parse Classification').item.json.classification.drugs_mentioned.join(',') }}",
+              "type": "string"
+            },
+            {
+              "id": "4ee74015-8c21-493f-8852-f3a15b60265a",
+              "name": "query_category",
+              "value": "DRUG_INTERACTION",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        160
+      ],
+      "id": "13afdf45-40a9-4d93-9290-2e6304b3a1f1",
+      "name": "Prepare SAFETY_CONCERN Query"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/embed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=texts",
+              "value": "={{ [$json.user_query] }}"
+            },
+            {
+              "name": "model",
+              "value": "embed-multilingual-v3.0"
+            },
+            {
+              "name": "input_type",
+              "value": "search_query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        48
+      ],
+      "id": "ea842fe7-1897-438b-bca3-5106ecf1ef58",
+      "name": "Embed Query SAFETY_CONCERN",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n    id,\n    text AS chunk_content,\n    metadata->>'drug_name' AS drug_name,\n    metadata->>'section' AS section,\n    metadata->>'brand_names' AS brand_names,\n    metadata->>'rxcui' AS rxcui,\n    embedding <=> $1::vector AS distance\nFROM pharmacy_knowledge\nWHERE \n    CASE \n        WHEN $2 != '' THEN metadata->>'drug_name' = ANY(string_to_array($2, ','))\n        ELSE TRUE\n    END\nORDER BY (embedding <=> $1::vector) + \n    CASE \n        WHEN metadata->>'section' IN ('warnings_and_cautions', 'boxed_warning', 'adverse_reactions') THEN 0.0\n        WHEN metadata->>'section' IN ('contraindications', 'overdosage') THEN 0.03\n        WHEN metadata->>'section' IN ('use_in_specific_populations', 'pregnancy', 'pediatric_use', 'geriatric_use') THEN 0.07\n        ELSE 0.20\n    END ASC\nLIMIT 8;",
+        "options": {
+          "queryReplacement": "={{ '[' + $('Embed Query SAFETY_CONCERN').item.json.embeddings[0].join(',') + ']' }}, ={{ $('Prepare SAFETY_CONCERN Query').item.json.drugs_filter }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        544,
+        16
+      ],
+      "id": "848f594f-53b5-44bf-9392-4921a650691c",
+      "name": "Vector Search SAFETY_CONCERN",
+      "credentials": {
+        "postgres": {
+          "id": "q2vDzOqpy6cbn6pF",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst retrievedChunks = items.map(item => item.json);\n\n// Bring forward the original query data\nconst queryData = $('Prepare SAFETY_CONCERN Query').item.json;\n\n// Format chunks into a clean context string for downstream agents\nconst formattedContext = retrievedChunks\n    .map((chunk, idx) => {\n        return `[Source ${idx + 1}: ${chunk.drug_name} - ${chunk.section}]\\n${chunk.chunk_content}\\n`;\n    })\n    .join('\\n---\\n');\n\n// Build a citation-ready summary\nconst sources = retrievedChunks.map(chunk => ({\n    drug_name: chunk.drug_name,\n    section: chunk.section,\n    brand_names: chunk.brand_names,\n    rxcui: chunk.rxcui,\n    distance: parseFloat(chunk.distance)\n}));\n\nreturn {\n    json: {\n        request_id: queryData.request_id,\n        user_query: queryData.user_query,\n        user_context: queryData.user_context,\n        classification: queryData.classification,\n        query_category: queryData.query_category,\n        rag_context: formattedContext,\n        rag_sources: sources,\n        rag_chunk_count: retrievedChunks.length\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        16
+      ],
+      "id": "792eaa69-cc1e-4d09-b8a4-afcc7dc34294",
+      "name": "Format SAFETY_CONCERN Context"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9bb04b1-4734-44d7-9cd5-0416ede27ec7",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "df9bb11d-eeee-4a94-9153-1426432ef25f",
+              "name": "step_name",
+              "value": "rag_documents_retrieved",
+              "type": "string"
+            },
+            {
+              "id": "e60603ab-65ba-48a6-8f5d-e57fb7316a68",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.rag_sources) }}",
+              "type": "string"
+            },
+            {
+              "id": "84dd70e6-40a9-4bc3-80c5-f702f383e33e",
+              "name": "=error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        32
+      ],
+      "id": "94aa6136-83f8-4833-b9f0-2f51e4a94b8e",
+      "name": "Prepare RAG Audit SAFETY_CONCERN"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "8GzfyjqHaSkR9RbH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/8GzfyjqHaSkR9RbH",
+          "cachedResultName": "Audit_Logger"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        16
+      ],
+      "id": "b5b34073-6081-49ac-967d-ac72df04080e",
+      "name": "Call Audit_Logger RAG SAFETY_CONCERN"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  request_id: $('Parse Safety Verdict SAFETY_CONCERN').item.json.request_id,\n  status: \"completed\",\n  category: \"SAFETY_CONCERN\",\n  user_query: $('Parse Safety Verdict SAFETY_CONCERN').item.json.user_query,\n  response: $('Parse Safety Verdict SAFETY_CONCERN').item.json.final_response.answer,\n  key_takeaway: $('Parse Safety Verdict SAFETY_CONCERN').item.json.final_response.key_takeaway,\n  confidence: $('Parse Safety Verdict SAFETY_CONCERN').item.json.final_response.confidence,\n  sources_cited: $('Parse Safety Verdict SAFETY_CONCERN').item.json.final_response.sources_cited,\n  recommend_professional_consultation: $('Parse Safety Verdict SAFETY_CONCERN').item.json.final_response.recommend_professional_consultation,\n  rag_sources: $('Parse Safety Verdict SAFETY_CONCERN').item.json.rag_sources,\n  safety_verdict: $('Parse Safety Verdict SAFETY_CONCERN').item.json.safety_verdict,\n  safety_issues: $('Parse Safety Verdict SAFETY_CONCERN').item.json.safety_issues,\n  disclaimer: \"This information is for educational purposes only and is not a substitute for professional medical advice. Always consult your pharmacist or physician.\"\n}) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3360,
+        -16
+      ],
+      "id": "1afcba39-2d6d-427a-9ad3-f61bf1926fcd",
+      "name": "Respond SAFETY_CONCERN"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Parse Classification').item.json.classification.category }}",
+                    "rightValue": "DRUG_INFO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e7fc8465-6659-4958-b497-273be6a19c5c"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "69040b40-6d61-4b76-b3cd-3d31f0a668ce",
+                    "leftValue": "={{ $('Parse Classification').item.json.classification.category }}",
+                    "rightValue": "DRUG_INTERACTION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f4e604be-a0d3-4cae-8fca-da9864cbaa47",
+                    "leftValue": "={{ $('Parse Classification').item.json.classification.category }}",
+                    "rightValue": "DOSAGE_QUESTION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d3b97c96-dddd-43c8-ac17-693fd810385f",
+                    "leftValue": "={{ $('Parse Classification').item.json.classification.category }}",
+                    "rightValue": "SAFETY_CONCERN",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "511e3f76-a346-4185-aec9-0a890e3161c7",
+                    "leftValue": "={{ $('Parse Classification').item.json.classification.category }}",
+                    "rightValue": "OUT_OF_SCOPE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -576,
+        -16
+      ],
+      "id": "41887ac0-8196-420f-8674-360cc4a4f8fa",
+      "name": "Classification Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a knowledgeable pharmacy assistant supporting both pharmacists and patients. Your job is to answer medication questions using ONLY the provided context.  Hard rules: 1. Answer ONLY using the context provided. If the context does not contain enough information, explicitly say so. 2. NEVER invent dosages, brand names, or drug interactions not present in the context. 3. NEVER recommend that a user start, stop, or change a prescription medication without consulting their prescriber. 4. NEVER make diagnostic claims (e.g., \"you have X condition\"). 5. Cite sources for clinical claims using the format: \"According to the [drug name] label...\" or \"Per FDA labeling...\" 6. If the question concerns a specific patient situation (age, conditions, other medications), remind the user that personalized medical advice requires a pharmacist or physician.  Tone: - If the user role is \"patient\", use plain language. Avoid medical jargon, or define it when used. - If the user role is \"pharmacist\" or \"physician\", use clinical terminology directly.  Output format: You must output ONLY a JSON object with this exact structure, no markdown, no commentary: {   \"answer\": \"your full answer here, multiple paragraphs allowed, may include bullet points expressed as plain text with line breaks\",   \"sources_cited\": [\"list of which drug names you referenced\"],   \"confidence\": \"high\" | \"medium\" | \"low\",   \"recommend_professional_consultation\": true | false,   \"key_takeaway\": \"one sentence summary of the most important point\" }  Confidence levels: - \"high\": context contained clear, direct information answering the question - \"medium\": context contained partial information; you had to synthesize - \"low\": context was tangentially related; user should consult a professional  Set recommend_professional_consultation to true when: - The query involves specific dosing for the patient's situation - Multiple risk factors are present (age, drug combinations, conditions) - Symptoms or adverse events are described - The answer requires patient-specific judgment"
+            },
+            {
+              "name": "message",
+              "value": "=USER QUERY: {{ $('Format DRUG_INFO Context').item.json.user_query }}  USER CONTEXT: Role: {{ $('Format DRUG_INFO Context').item.json.user_context.role }} Age: {{ $('Format DRUG_INFO Context').item.json.user_context.age || 'not provided' }} Known conditions: {{ ($('Format DRUG_INFO Context').item.json.user_context.known_conditions || []).join(', ') || 'none provided' }} Current medications: {{ ($('Format DRUG_INFO Context').item.json.user_context.current_medications || []).join(', ') || 'none provided' }}  CLASSIFICATION: Category: DRUG_INFO Drugs identified in query: {{ ($('Format DRUG_INFO Context').item.json.classification.drugs_mentioned || []).join(', ') }} Urgency: {{ $('Format DRUG_INFO Context').item.json.classification.urgency }}  RETRIEVED MEDICAL CONTEXT (these are the trusted sources you must base your answer on):  {{ $('Format DRUG_INFO Context').item.json.rag_context }}  ---  Generate the JSON response according to the rules in your system prompt. Do not include any text outside the JSON object."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        800,
+        -1008
+      ],
+      "id": "da387672-dedd-4a4c-b205-4cfb2529d100",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\n\n// Extract text from Cohere response\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Response Agent returned empty response. Full response: ' + JSON.stringify(llmResponse));\n}\n\n// Strip markdown code blocks if present\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet response;\ntry {\n    response = JSON.parse(cleanText);\n} catch (e) {\n    // If JSON parsing fails, treat the raw text as the answer\n    // and flag it for safety review\n    response = {\n        answer: rawText,\n        sources_cited: [],\n        confidence: 'low',\n        recommend_professional_consultation: true,\n        key_takeaway: 'Response could not be parsed as structured output',\n        _parse_error: e.message\n    };\n}\n\n// Validate fields\nif (typeof response.answer !== 'string' || response.answer.length === 0) {\n    response.answer = 'I was unable to generate a response. Please consult your pharmacist or physician.';\n    response.confidence = 'low';\n    response.recommend_professional_consultation = true;\n}\n\nif (!Array.isArray(response.sources_cited)) {\n    response.sources_cited = [];\n}\n\nif (!['high', 'medium', 'low'].includes(response.confidence)) {\n    response.confidence = 'low';\n}\n\nif (typeof response.recommend_professional_consultation !== 'boolean') {\n    response.recommend_professional_consultation = true;  // safe default\n}\n\nif (typeof response.key_takeaway !== 'string') {\n    response.key_takeaway = '';\n}\n\n// Get tokens used (Cohere reports this in meta)\nconst tokensUsed = (llmResponse.meta?.billed_units?.input_tokens || 0) + \n                   (llmResponse.meta?.billed_units?.output_tokens || 0);\n\n// Carry forward all the data we need for downstream nodes\nconst ragData = $('Format DRUG_INFO Context').item.json;\n\nreturn {\n    json: {\n        request_id: ragData.request_id,\n        user_query: ragData.user_query,\n        user_context: ragData.user_context,\n        classification: ragData.classification,\n        rag_sources: ragData.rag_sources,\n        rag_chunk_count: ragData.rag_chunk_count,\n        draft_response: response,\n        raw_llm_text: rawText,\n        llm_tokens_used: tokensUsed\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        -1008
+      ],
+      "id": "5e425ce1-5733-4a73-81b4-f70eb8092dfe",
+      "name": "Parse Response DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54c81543-a5f4-4c88-b3bb-785e30f6812a",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94f3f7e3-5767-437b-bb18-c43bea54aa3f",
+              "name": "step_name",
+              "value": "draft_response",
+              "type": "string"
+            },
+            {
+              "id": "ca0d99b1-378e-4124-9f2d-793c5dddaebd",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.draft_response) }}",
+              "type": "string"
+            },
+            {
+              "id": "5be1aeff-c014-46f5-8aed-a1adcab3b482",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        -1008
+      ],
+      "id": "e7df8fb7-5379-4b7f-a061-cb6699c8580e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a knowledgeable pharmacy assistant supporting both pharmacists and patients. Your job is to answer medication questions using ONLY the provided context.  Hard rules: 1. Answer ONLY using the context provided. If the context does not contain enough information, explicitly say so. 2. NEVER invent dosages, brand names, or drug interactions not present in the context. 3. NEVER recommend that a user start, stop, or change a prescription medication without consulting their prescriber. 4. NEVER make diagnostic claims (e.g., \"you have X condition\"). 5. Cite sources for clinical claims using the format: \"According to the [drug name] label...\" or \"Per FDA labeling...\" 6. If the question concerns a specific patient situation (age, conditions, other medications), remind the user that personalized medical advice requires a pharmacist or physician.  Tone: - If the user role is \"patient\", use plain language. Avoid medical jargon, or define it when used. - If the user role is \"pharmacist\" or \"physician\", use clinical terminology directly.  Output format: You must output ONLY a JSON object with this exact structure, no markdown, no commentary: {   \"answer\": \"your full answer here, multiple paragraphs allowed, may include bullet points expressed as plain text with line breaks\",   \"sources_cited\": [\"list of which drug names you referenced\"],   \"confidence\": \"high\" | \"medium\" | \"low\",   \"recommend_professional_consultation\": true | false,   \"key_takeaway\": \"one sentence summary of the most important point\" }  Confidence levels: - \"high\": context contained clear, direct information answering the question - \"medium\": context contained partial information; you had to synthesize - \"low\": context was tangentially related; user should consult a professional  Set recommend_professional_consultation to true when: - The query involves specific dosing for the patient's situation - Multiple risk factors are present (age, drug combinations, conditions) - Symptoms or adverse events are described - The answer requires patient-specific judgment"
+            },
+            {
+              "name": "message",
+              "value": "=CLASSIFICATION:\nCategory: DRUG_INTERACTION\nDrugs being asked about: {{ ($('Format DRUG_INTERACTION Context').item.json.classification.drugs_mentioned || []).join(', ') }}\nUrgency: {{ $('Format DRUG_INTERACTION Context').item.json.classification.urgency }}\n\nCRITICAL FOR THIS QUERY:\nThe user is asking about a potential drug interaction. Your answer MUST:\n- Clearly state whether the combination is safe, risky, or contraindicated based on the context\n- If risky, explain the mechanism and what could happen\n- ALWAYS recommend consulting a pharmacist before combining medications\n\nRETRIEVED MEDICAL CONTEXT:\n{{ $('Format DRUG_INTERACTION Context').item.json.rag_context }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1632,
+        -544
+      ],
+      "id": "1e2617f4-5a64-401d-a20c-3c43ef66f456",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54c81543-a5f4-4c88-b3bb-785e30f6812a",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94f3f7e3-5767-437b-bb18-c43bea54aa3f",
+              "name": "step_name",
+              "value": "draft_response",
+              "type": "string"
+            },
+            {
+              "id": "ca0d99b1-378e-4124-9f2d-793c5dddaebd",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.draft_response) }}",
+              "type": "string"
+            },
+            {
+              "id": "5be1aeff-c014-46f5-8aed-a1adcab3b482",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2048,
+        -544
+      ],
+      "id": "d2bc1d24-ac0b-4a9d-b169-5abccf56ea6d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a knowledgeable pharmacy assistant supporting both pharmacists and patients. Your job is to answer medication questions using ONLY the provided context.  Hard rules: 1. Answer ONLY using the context provided. If the context does not contain enough information, explicitly say so. 2. NEVER invent dosages, brand names, or drug interactions not present in the context. 3. NEVER recommend that a user start, stop, or change a prescription medication without consulting their prescriber. 4. NEVER make diagnostic claims (e.g., \"you have X condition\"). 5. Cite sources for clinical claims using the format: \"According to the [drug name] label...\" or \"Per FDA labeling...\" 6. If the question concerns a specific patient situation (age, conditions, other medications), remind the user that personalized medical advice requires a pharmacist or physician.  Tone: - If the user role is \"patient\", use plain language. Avoid medical jargon, or define it when used. - If the user role is \"pharmacist\" or \"physician\", use clinical terminology directly.  Output format: You must output ONLY a JSON object with this exact structure, no markdown, no commentary: {   \"answer\": \"your full answer here, multiple paragraphs allowed, may include bullet points expressed as plain text with line breaks\",   \"sources_cited\": [\"list of which drug names you referenced\"],   \"confidence\": \"high\" | \"medium\" | \"low\",   \"recommend_professional_consultation\": true | false,   \"key_takeaway\": \"one sentence summary of the most important point\" }  Confidence levels: - \"high\": context contained clear, direct information answering the question - \"medium\": context contained partial information; you had to synthesize - \"low\": context was tangentially related; user should consult a professional  Set recommend_professional_consultation to true when: - The query involves specific dosing for the patient's situation - Multiple risk factors are present (age, drug combinations, conditions) - Symptoms or adverse events are described - The answer requires patient-specific judgment"
+            },
+            {
+              "name": "message",
+              "value": "=CLASSIFICATION:\nCategory: DOSAGE_QUESTION\nDrug(s): {{ ($('Format DOSAGE_QUESTION Context').item.json.classification.drugs_mentioned || []).join(', ') }}\nUrgency: {{ $('Format DOSAGE_QUESTION Context').item.json.classification.urgency }}\n\nCRITICAL FOR THIS QUERY:\nThe user is asking about dosing. Your answer MUST:\n- Provide GENERAL dosing ranges from the FDA label only (e.g., \"the typical adult dose is X to Y mg\")\n- NEVER tell the user what their specific dose should be\n- ALWAYS direct them to their prescriber for their specific dose\n- For pediatric questions, emphasize that pediatric dosing requires a healthcare professional\n\nRETRIEVED MEDICAL CONTEXT:\n{{ $('Format DOSAGE_QUESTION Context').item.json.rag_context }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1680,
+        -288
+      ],
+      "id": "9bf79488-260d-44d4-a98c-1d1238b1d084",
+      "name": "HTTP Request2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54c81543-a5f4-4c88-b3bb-785e30f6812a",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94f3f7e3-5767-437b-bb18-c43bea54aa3f",
+              "name": "step_name",
+              "value": "draft_response",
+              "type": "string"
+            },
+            {
+              "id": "ca0d99b1-378e-4124-9f2d-793c5dddaebd",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.draft_response) }}",
+              "type": "string"
+            },
+            {
+              "id": "5be1aeff-c014-46f5-8aed-a1adcab3b482",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2096,
+        -288
+      ],
+      "id": "607a0765-7cfd-44a1-afab-2bbd6eab98ad",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a knowledgeable pharmacy assistant supporting both pharmacists and patients. Your job is to answer medication questions using ONLY the provided context.  Hard rules: 1. Answer ONLY using the context provided. If the context does not contain enough information, explicitly say so. 2. NEVER invent dosages, brand names, or drug interactions not present in the context. 3. NEVER recommend that a user start, stop, or change a prescription medication without consulting their prescriber. 4. NEVER make diagnostic claims (e.g., \"you have X condition\"). 5. Cite sources for clinical claims using the format: \"According to the [drug name] label...\" or \"Per FDA labeling...\" 6. If the question concerns a specific patient situation (age, conditions, other medications), remind the user that personalized medical advice requires a pharmacist or physician.  Tone: - If the user role is \"patient\", use plain language. Avoid medical jargon, or define it when used. - If the user role is \"pharmacist\" or \"physician\", use clinical terminology directly.  Output format: You must output ONLY a JSON object with this exact structure, no markdown, no commentary: {   \"answer\": \"your full answer here, multiple paragraphs allowed, may include bullet points expressed as plain text with line breaks\",   \"sources_cited\": [\"list of which drug names you referenced\"],   \"confidence\": \"high\" | \"medium\" | \"low\",   \"recommend_professional_consultation\": true | false,   \"key_takeaway\": \"one sentence summary of the most important point\" }  Confidence levels: - \"high\": context contained clear, direct information answering the question - \"medium\": context contained partial information; you had to synthesize - \"low\": context was tangentially related; user should consult a professional  Set recommend_professional_consultation to true when: - The query involves specific dosing for the patient's situation - Multiple risk factors are present (age, drug combinations, conditions) - Symptoms or adverse events are described - The answer requires patient-specific judgment"
+            },
+            {
+              "name": "message",
+              "value": "=CLASSIFICATION:\nCategory: SAFETY_CONCERN\nDrug(s): {{ ($('Format SAFETY_CONCERN Context').item.json.classification.drugs_mentioned || []).join(', ') }}\nUrgency: {{ $('Format SAFETY_CONCERN Context').item.json.classification.urgency }}\n\nCRITICAL FOR THIS QUERY:\nThe user is describing a safety concern, possible adverse reaction, or accidental ingestion. Your answer MUST:\n- If the urgency is \"urgent\", begin your answer with: \"If this is an emergency, call your local emergency services immediately or go to the nearest emergency department.\"\n- Provide information from the label about the relevant warnings, adverse reactions, or contraindications\n- Strongly recommend immediate consultation with a pharmacist, physician, or poison control center\n- For accidental double dosing, explain what the label says about overdose, but do not minimize the concern\n\nRETRIEVED MEDICAL CONTEXT:\n{{ $('Format SAFETY_CONCERN Context').item.json.rag_context }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1712,
+        0
+      ],
+      "id": "13531371-7b4c-4cdf-8fb5-a33648c9c274",
+      "name": "HTTP Request3",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54c81543-a5f4-4c88-b3bb-785e30f6812a",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94f3f7e3-5767-437b-bb18-c43bea54aa3f",
+              "name": "step_name",
+              "value": "draft_response",
+              "type": "string"
+            },
+            {
+              "id": "ca0d99b1-378e-4124-9f2d-793c5dddaebd",
+              "name": "step_data",
+              "value": "={{ JSON.stringify($json.draft_response) }}",
+              "type": "string"
+            },
+            {
+              "id": "5be1aeff-c014-46f5-8aed-a1adcab3b482",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2128,
+        0
+      ],
+      "id": "1c4c61d2-2a28-4ba9-a323-471785336529",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\n\n// Extract text from Cohere response\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Response Agent returned empty response. Full response: ' + JSON.stringify(llmResponse));\n}\n\n// Strip markdown code blocks if present\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet response;\ntry {\n    response = JSON.parse(cleanText);\n} catch (e) {\n    // If JSON parsing fails, treat the raw text as the answer\n    // and flag it for safety review\n    response = {\n        answer: rawText,\n        sources_cited: [],\n        confidence: 'low',\n        recommend_professional_consultation: true,\n        key_takeaway: 'Response could not be parsed as structured output',\n        _parse_error: e.message\n    };\n}\n\n// Validate fields\nif (typeof response.answer !== 'string' || response.answer.length === 0) {\n    response.answer = 'I was unable to generate a response. Please consult your pharmacist or physician.';\n    response.confidence = 'low';\n    response.recommend_professional_consultation = true;\n}\n\nif (!Array.isArray(response.sources_cited)) {\n    response.sources_cited = [];\n}\n\nif (!['high', 'medium', 'low'].includes(response.confidence)) {\n    response.confidence = 'low';\n}\n\nif (typeof response.recommend_professional_consultation !== 'boolean') {\n    response.recommend_professional_consultation = true;  // safe default\n}\n\nif (typeof response.key_takeaway !== 'string') {\n    response.key_takeaway = '';\n}\n\n// Get tokens used (Cohere reports this in meta)\nconst tokensUsed = (llmResponse.meta?.billed_units?.input_tokens || 0) + \n                   (llmResponse.meta?.billed_units?.output_tokens || 0);\n\n// Carry forward all the data we need for downstream nodes\nconst ragData = $('Format DOSAGE_QUESTION Context').item.json;\n\nreturn {\n    json: {\n        request_id: ragData.request_id,\n        user_query: ragData.user_query,\n        user_context: ragData.user_context,\n        classification: ragData.classification,\n        rag_sources: ragData.rag_sources,\n        rag_chunk_count: ragData.rag_chunk_count,\n        draft_response: response,\n        raw_llm_text: rawText,\n        llm_tokens_used: tokensUsed\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        -288
+      ],
+      "id": "553e6ca4-634f-4ff8-ac8f-5c7ba0d7bc6a",
+      "name": "Parse Response Dosage"
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\n\n// Extract text from Cohere response\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Response Agent returned empty response. Full response: ' + JSON.stringify(llmResponse));\n}\n\n// Strip markdown code blocks if present\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet response;\ntry {\n    response = JSON.parse(cleanText);\n} catch (e) {\n    // If JSON parsing fails, treat the raw text as the answer\n    // and flag it for safety review\n    response = {\n        answer: rawText,\n        sources_cited: [],\n        confidence: 'low',\n        recommend_professional_consultation: true,\n        key_takeaway: 'Response could not be parsed as structured output',\n        _parse_error: e.message\n    };\n}\n\n// Validate fields\nif (typeof response.answer !== 'string' || response.answer.length === 0) {\n    response.answer = 'I was unable to generate a response. Please consult your pharmacist or physician.';\n    response.confidence = 'low';\n    response.recommend_professional_consultation = true;\n}\n\nif (!Array.isArray(response.sources_cited)) {\n    response.sources_cited = [];\n}\n\nif (!['high', 'medium', 'low'].includes(response.confidence)) {\n    response.confidence = 'low';\n}\n\nif (typeof response.recommend_professional_consultation !== 'boolean') {\n    response.recommend_professional_consultation = true;  // safe default\n}\n\nif (typeof response.key_takeaway !== 'string') {\n    response.key_takeaway = '';\n}\n\n// Get tokens used (Cohere reports this in meta)\nconst tokensUsed = (llmResponse.meta?.billed_units?.input_tokens || 0) + \n                   (llmResponse.meta?.billed_units?.output_tokens || 0);\n\n// Carry forward all the data we need for downstream nodes\nconst ragData = $('Format DRUG_INTERACTION Context').item.json;\n\nreturn {\n    json: {\n        request_id: ragData.request_id,\n        user_query: ragData.user_query,\n        user_context: ragData.user_context,\n        classification: ragData.classification,\n        rag_sources: ragData.rag_sources,\n        rag_chunk_count: ragData.rag_chunk_count,\n        draft_response: response,\n        raw_llm_text: rawText,\n        llm_tokens_used: tokensUsed\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        -544
+      ],
+      "id": "90ca55f5-601c-4a2b-b1d4-d07f73d12de7",
+      "name": "Parse Response DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\n\n// Extract text from Cohere response\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Response Agent returned empty response. Full response: ' + JSON.stringify(llmResponse));\n}\n\n// Strip markdown code blocks if present\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet response;\ntry {\n    response = JSON.parse(cleanText);\n} catch (e) {\n    // If JSON parsing fails, treat the raw text as the answer\n    // and flag it for safety review\n    response = {\n        answer: rawText,\n        sources_cited: [],\n        confidence: 'low',\n        recommend_professional_consultation: true,\n        key_takeaway: 'Response could not be parsed as structured output',\n        _parse_error: e.message\n    };\n}\n// Add this near the bottom, after all the validation, before the return:\nconst queryCategory = $('Format SAFETY_CONCERN Context').item.json.query_category;\nif (queryCategory === 'SAFETY_CONCERN') {\n    response.recommend_professional_consultation = true;\n}\n// Validate fields\nif (typeof response.answer !== 'string' || response.answer.length === 0) {\n    response.answer = 'I was unable to generate a response. Please consult your pharmacist or physician.';\n    response.confidence = 'low';\n    response.recommend_professional_consultation = true;\n}\n\nif (!Array.isArray(response.sources_cited)) {\n    response.sources_cited = [];\n}\n\nif (!['high', 'medium', 'low'].includes(response.confidence)) {\n    response.confidence = 'low';\n}\n\nif (typeof response.recommend_professional_consultation !== 'boolean') {\n    response.recommend_professional_consultation = true;  // safe default\n}\n\nif (typeof response.key_takeaway !== 'string') {\n    response.key_takeaway = '';\n}\n\n// Get tokens used (Cohere reports this in meta)\nconst tokensUsed = (llmResponse.meta?.billed_units?.input_tokens || 0) + \n                   (llmResponse.meta?.billed_units?.output_tokens || 0);\n\n// Carry forward all the data we need for downstream nodes\nconst ragData = $('Format SAFETY_CONCERN Context').item.json;\n\nreturn {\n    json: {\n        request_id: ragData.request_id,\n        user_query: ragData.user_query,\n        user_context: ragData.user_context,\n        classification: ragData.classification,\n        rag_sources: ragData.rag_sources,\n        rag_chunk_count: ragData.rag_chunk_count,\n        draft_response: response,\n        raw_llm_text: rawText,\n        llm_tokens_used: tokensUsed\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        0
+      ],
+      "id": "a11b3373-b193-4398-b406-95249ae0c385",
+      "name": "Parse Response safety"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a clinical safety reviewer for a pharmacy assistant. Your job is to examine a draft AI response and determine if it is safe to send to the user, or if it needs modification or blocking.  You are NOT generating new medical content. You are CRITIQUING the draft response for safety issues.  CRITICAL SAFETY ISSUES (must block or require modification): 1. Specific dose recommendations not supported by the source context 2. Adult dosing presented in response to a pediatric question (or vice versa) 3. Encouraging a user to start, stop, or change a prescription medication without consulting a clinician 4. Diagnostic claims (e.g., \"you have X condition\") 5. Missing contraindication mentions when patient context indicates relevant risk (age, comorbidities, other medications) 6. Reassurance about a dangerous drug interaction or adverse reaction 7. Fabricated drug names, doses, or studies not in the source context 8. Adverse-event minimization for a query indicating active symptoms  MODERATE ISSUES (require disclaimer or caveat addition): 1. Information that is generally correct but could be misapplied without context 2. Missing pregnancy/breastfeeding warnings for women of reproductive age 3. Missing pediatric/geriatric warnings when relevant patient context is present 4. Information from a brand-specific label being applied as if it were universal  ACCEPTABLE: A response that doesn't have the issues above. Most simple drug info queries should be acceptable.  Your output must be ONLY a JSON object with this exact structure (no markdown, no commentary): {   \"verdict\": \"approve\" | \"modify\" | \"block\",   \"issues_found\": [     {\"severity\": \"critical\" | \"moderate\", \"description\": \"what is wrong\"}   ],   \"modified_response\": \"if verdict is modify, the corrected/improved response text. Otherwise null.\",   \"additional_disclaimer\": \"if verdict is modify and an extra disclaimer is needed, the text. Otherwise null.\",   \"rationale\": \"one sentence explaining the verdict\" }  Verdict guide: - \"approve\": the response is safe as-is - \"modify\": fixable safety issues; provide a corrected response - \"block\": the response is dangerous and cannot be salvaged; user should be told no answer is available and to consult a professional"
+            },
+            {
+              "name": "message",
+              "value": "=USER QUERY: {{ $('Parse Response DRUG_INFO').item.json.user_query }}  USER CONTEXT: Role: {{ $('Parse Response DRUG_INFO').item.json.user_context.role }} Age: {{ $('Parse Response DRUG_INFO').item.json.user_context.age || 'not provided' }} Known conditions: {{ ($('Parse Response DRUG_INFO').item.json.user_context.known_conditions || []).join(', ') || 'none' }} Current medications: {{ ($('Parse Response DRUG_INFO').item.json.user_context.current_medications || []).join(', ') || 'none' }}  QUERY CATEGORY: DRUG_INFO  DRAFT RESPONSE TO REVIEW: {{ $('Parse Response DRUG_INFO').item.json.draft_response.answer }}  DRAFT METADATA: Confidence: {{ $('Parse Response DRUG_INFO').item.json.draft_response.confidence }} Sources cited: {{ $('Parse Response DRUG_INFO').item.json.draft_response.sources_cited.join(', ') }} Recommends professional consultation: {{ $('Parse Response DRUG_INFO').item.json.draft_response.recommend_professional_consultation }}  ---  Analyze the draft response for safety issues. Output the JSON verdict according to the rules in your system prompt."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1424,
+        -1008
+      ],
+      "id": "c7fe596a-a199-47ed-b77c-22184d7ef841",
+      "name": "Safety Reviewer DRUG_INFO",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Safety Reviewer returned empty response');\n}\n\n// Strip markdown code blocks\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet verdict;\ntry {\n    verdict = JSON.parse(cleanText);\n} catch (e) {\n    // If parsing fails, default to safe behavior\n    verdict = {\n        verdict: 'modify',\n        issues_found: [{severity: 'moderate', description: 'Safety reviewer output could not be parsed'}],\n        modified_response: null,\n        additional_disclaimer: 'Note: This response was generated automatically. Please verify any clinical decisions with a healthcare professional.',\n        rationale: 'Reviewer output unparseable; applying safe default'\n    };\n}\n\n// Validate verdict shape\nif (!['approve', 'modify', 'block'].includes(verdict.verdict)) {\n    verdict.verdict = 'modify';  // safer default\n}\n\nif (!Array.isArray(verdict.issues_found)) {\n    verdict.issues_found = [];\n}\n\n// Pull forward all the data we need\nconst draftData = $('Parse Response DRUG_INFO').item.json;\n\n// Apply the verdict\nlet finalAnswer = draftData.draft_response.answer;\nlet finalConfidence = draftData.draft_response.confidence;\nlet blockReason = null;\nlet appliedDisclaimer = null;\n\nif (verdict.verdict === 'block') {\n    finalAnswer = \"I can't safely answer this question based on the information available. Please consult a licensed pharmacist or physician for guidance.\";\n    finalConfidence = 'low';\n    blockReason = verdict.rationale;\n} else if (verdict.verdict === 'modify') {\n    if (verdict.modified_response && typeof verdict.modified_response === 'string' && verdict.modified_response.length > 0) {\n        finalAnswer = verdict.modified_response;\n    }\n    if (verdict.additional_disclaimer && typeof verdict.additional_disclaimer === 'string') {\n        appliedDisclaimer = verdict.additional_disclaimer;\n        finalAnswer = finalAnswer + '\\n\\n' + verdict.additional_disclaimer;\n    }\n}\n\nreturn {\n    json: {\n        request_id: draftData.request_id,\n        user_query: draftData.user_query,\n        user_context: draftData.user_context,\n        classification: draftData.classification,\n        rag_sources: draftData.rag_sources,\n        rag_chunk_count: draftData.rag_chunk_count,\n        original_draft: draftData.draft_response,\n        safety_verdict: verdict.verdict,\n        safety_issues: verdict.issues_found,\n        safety_rationale: verdict.rationale,\n        block_reason: blockReason,\n        applied_disclaimer: appliedDisclaimer,\n        final_response: {\n            answer: finalAnswer,\n            confidence: finalConfidence,\n            recommend_professional_consultation: draftData.draft_response.recommend_professional_consultation || verdict.verdict !== 'approve',\n            sources_cited: draftData.draft_response.sources_cited,\n            key_takeaway: draftData.draft_response.key_takeaway\n        }\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1648,
+        -1008
+      ],
+      "id": "341bcb1b-a1f1-45ec-a704-e0bab73e51f4",
+      "name": "Parse Safety Verdict DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0512097-c806-45ec-82aa-9a80bcbcd2e6",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a4acaffe-11f9-4b9f-a47d-fffc428722ee",
+              "name": "step_name",
+              "value": "safety_verdict",
+              "type": "string"
+            },
+            {
+              "id": "bb969f72-fa66-4b59-b0d4-1af0762d31f7",
+              "name": "=step_data",
+              "value": "={{ $json.safety_verdict }}",
+              "type": "string"
+            },
+            {
+              "id": "17e9ad8a-6be1-4095-a072-e91d7e3b2a22",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1856,
+        -1008
+      ],
+      "id": "32cacc4b-3824-4ecc-abc9-1c8a0c450128",
+      "name": "Prepare Safety Audit DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e886a05-0922-4c78-9d1b-6b9213b5700e",
+              "name": "=request_id",
+              "value": "={{ $('Parse Safety Verdict DRUG_INFO').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94ee1a2b-4581-4d30-9d9a-05da8b56ed4d",
+              "name": "step_name",
+              "value": "safety_reason",
+              "type": "string"
+            },
+            {
+              "id": "12e2e096-f6ba-4d2a-af39-8ac037cb332a",
+              "name": "step_data",
+              "value": "={{ JSON.stringify({ rationale: $('Parse Safety Verdict DRUG_INFO').item.json.safety_rationale, issues: $('Parse Safety Verdict DRUG_INFO').item.json.safety_issues }) }}",
+              "type": "string"
+            },
+            {
+              "id": "f1b7bec9-ee40-4959-8648-a7631a17fd84",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2064,
+        -1008
+      ],
+      "id": "6f13d577-3b70-4211-abcd-075e2e011783",
+      "name": "Prepare Safety Reason Audit DRUG_INFO"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a clinical safety reviewer for a pharmacy assistant. Your job is to examine a draft AI response and determine if it is safe to send to the user, or if it needs modification or blocking.  You are NOT generating new medical content. You are CRITIQUING the draft response for safety issues.  CRITICAL SAFETY ISSUES (must block or require modification): 1. Specific dose recommendations not supported by the source context 2. Adult dosing presented in response to a pediatric question (or vice versa) 3. Encouraging a user to start, stop, or change a prescription medication without consulting a clinician 4. Diagnostic claims (e.g., \"you have X condition\") 5. Missing contraindication mentions when patient context indicates relevant risk (age, comorbidities, other medications) 6. Reassurance about a dangerous drug interaction or adverse reaction 7. Fabricated drug names, doses, or studies not in the source context 8. Adverse-event minimization for a query indicating active symptoms  MODERATE ISSUES (require disclaimer or caveat addition): 1. Information that is generally correct but could be misapplied without context 2. Missing pregnancy/breastfeeding warnings for women of reproductive age 3. Missing pediatric/geriatric warnings when relevant patient context is present 4. Information from a brand-specific label being applied as if it were universal  ACCEPTABLE: A response that doesn't have the issues above. Most simple drug info queries should be acceptable.  Your output must be ONLY a JSON object with this exact structure (no markdown, no commentary): {   \"verdict\": \"approve\" | \"modify\" | \"block\",   \"issues_found\": [     {\"severity\": \"critical\" | \"moderate\", \"description\": \"what is wrong\"}   ],   \"modified_response\": \"if verdict is modify, the corrected/improved response text. Otherwise null.\",   \"additional_disclaimer\": \"if verdict is modify and an extra disclaimer is needed, the text. Otherwise null.\",   \"rationale\": \"one sentence explaining the verdict\" }  Verdict guide: - \"approve\": the response is safe as-is - \"modify\": fixable safety issues; provide a corrected response - \"block\": the response is dangerous and cannot be salvaged; user should be told no answer is available and to consult a professional"
+            },
+            {
+              "name": "message",
+              "value": "=USER QUERY: {{ $('Parse Response DRUG_INTERACTION').item.json.user_query }}  USER CONTEXT: Role: {{ $('Parse Response DRUG_INTERACTION').item.json.user_context.role }} Age: {{ $('Parse Response DRUG_INTERACTION').item.json.user_context.age || 'not provided' }} Known conditions: {{ ($('Parse Response DRUG_INTERACTION').item.json.user_context.known_conditions || []).join(', ') || 'none' }} Current medications: {{ ($('Parse Response DRUG_INTERACTION').item.json.user_context.current_medications || []).join(', ') || 'none' }}  QUERY CATEGORY: DRUG_INFO  DRAFT RESPONSE TO REVIEW: {{ $('Parse Response DRUG_INTERACTION').item.json.draft_response.answer }}  DRAFT METADATA: Confidence: {{ $('Parse Response DRUG_INTERACTION').item.json.draft_response.confidence }} Sources cited: {{ $('Parse Response DRUG_INTERACTION').item.json.draft_response.sources_cited.join(', ') }} Recommends professional consultation: {{ $('Parse Response DRUG_INTERACTION').item.json.draft_response.recommend_professional_consultation }}  ---  Analyze the draft response for safety issues. Output the JSON verdict according to the rules in your system prompt."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2288,
+        -592
+      ],
+      "id": "79b03c0a-3877-4317-a36c-3737ded69bac",
+      "name": "Safety Reviewer DRUG_INTERACTION",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Safety Reviewer returned empty response');\n}\n\n// Strip markdown code blocks\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet verdict;\ntry {\n    verdict = JSON.parse(cleanText);\n} catch (e) {\n    // If parsing fails, default to safe behavior\n    verdict = {\n        verdict: 'modify',\n        issues_found: [{severity: 'moderate', description: 'Safety reviewer output could not be parsed'}],\n        modified_response: null,\n        additional_disclaimer: 'Note: This response was generated automatically. Please verify any clinical decisions with a healthcare professional.',\n        rationale: 'Reviewer output unparseable; applying safe default'\n    };\n}\n\n// Validate verdict shape\nif (!['approve', 'modify', 'block'].includes(verdict.verdict)) {\n    verdict.verdict = 'modify';  // safer default\n}\n\nif (!Array.isArray(verdict.issues_found)) {\n    verdict.issues_found = [];\n}\n\n// Pull forward all the data we need\nconst draftData = $('Parse Response DRUG_INTERACTION').item.json;\n\n// Apply the verdict\nlet finalAnswer = draftData.draft_response.answer;\nlet finalConfidence = draftData.draft_response.confidence;\nlet blockReason = null;\nlet appliedDisclaimer = null;\n\nif (verdict.verdict === 'block') {\n    finalAnswer = \"I can't safely answer this question based on the information available. Please consult a licensed pharmacist or physician for guidance.\";\n    finalConfidence = 'low';\n    blockReason = verdict.rationale;\n} else if (verdict.verdict === 'modify') {\n    if (verdict.modified_response && typeof verdict.modified_response === 'string' && verdict.modified_response.length > 0) {\n        finalAnswer = verdict.modified_response;\n    }\n    if (verdict.additional_disclaimer && typeof verdict.additional_disclaimer === 'string') {\n        appliedDisclaimer = verdict.additional_disclaimer;\n        finalAnswer = finalAnswer + '\\n\\n' + verdict.additional_disclaimer;\n    }\n}\n\nreturn {\n    json: {\n        request_id: draftData.request_id,\n        user_query: draftData.user_query,\n        user_context: draftData.user_context,\n        classification: draftData.classification,\n        rag_sources: draftData.rag_sources,\n        rag_chunk_count: draftData.rag_chunk_count,\n        original_draft: draftData.draft_response,\n        safety_verdict: verdict.verdict,\n        safety_issues: verdict.issues_found,\n        safety_rationale: verdict.rationale,\n        block_reason: blockReason,\n        applied_disclaimer: appliedDisclaimer,\n        final_response: {\n            answer: finalAnswer,\n            confidence: finalConfidence,\n            recommend_professional_consultation: draftData.draft_response.recommend_professional_consultation || verdict.verdict !== 'approve',\n            sources_cited: draftData.draft_response.sources_cited,\n            key_takeaway: draftData.draft_response.key_takeaway\n        }\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2512,
+        -592
+      ],
+      "id": "68dfcc88-afa2-421e-af63-376df11caf5e",
+      "name": "Parse Safety Verdict DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0512097-c806-45ec-82aa-9a80bcbcd2e6",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a4acaffe-11f9-4b9f-a47d-fffc428722ee",
+              "name": "step_name",
+              "value": "safety_verdict",
+              "type": "string"
+            },
+            {
+              "id": "bb969f72-fa66-4b59-b0d4-1af0762d31f7",
+              "name": "=step_data",
+              "value": "={{ $json.safety_verdict }}",
+              "type": "string"
+            },
+            {
+              "id": "17e9ad8a-6be1-4095-a072-e91d7e3b2a22",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2720,
+        -592
+      ],
+      "id": "9a7c8dd4-d7ce-4a6f-bdeb-185a9616944b",
+      "name": "Prepare Safety Audit DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e886a05-0922-4c78-9d1b-6b9213b5700e",
+              "name": "=request_id",
+              "value": "={{ $('Parse Safety Verdict DRUG_INTERACTION').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94ee1a2b-4581-4d30-9d9a-05da8b56ed4d",
+              "name": "step_name",
+              "value": "safety_reason",
+              "type": "string"
+            },
+            {
+              "id": "12e2e096-f6ba-4d2a-af39-8ac037cb332a",
+              "name": "step_data",
+              "value": "={{ JSON.stringify({ rationale: $('Parse Safety Verdict DRUG_INTERACTION').item.json.safety_rationale, issues: $('Parse Safety Verdict DRUG_INTERACTION').item.json.safety_issues }) }}",
+              "type": "string"
+            },
+            {
+              "id": "f1b7bec9-ee40-4959-8648-a7631a17fd84",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2928,
+        -592
+      ],
+      "id": "2cbef273-f685-451c-a22b-23e0ee3058f5",
+      "name": "Prepare Safety Reason Audit DRUG_INTERACTION"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a clinical safety reviewer for a pharmacy assistant. Your job is to examine a draft AI response and determine if it is safe to send to the user, or if it needs modification or blocking.  You are NOT generating new medical content. You are CRITIQUING the draft response for safety issues.  CRITICAL SAFETY ISSUES (must block or require modification): 1. Specific dose recommendations not supported by the source context 2. Adult dosing presented in response to a pediatric question (or vice versa) 3. Encouraging a user to start, stop, or change a prescription medication without consulting a clinician 4. Diagnostic claims (e.g., \"you have X condition\") 5. Missing contraindication mentions when patient context indicates relevant risk (age, comorbidities, other medications) 6. Reassurance about a dangerous drug interaction or adverse reaction 7. Fabricated drug names, doses, or studies not in the source context 8. Adverse-event minimization for a query indicating active symptoms  MODERATE ISSUES (require disclaimer or caveat addition): 1. Information that is generally correct but could be misapplied without context 2. Missing pregnancy/breastfeeding warnings for women of reproductive age 3. Missing pediatric/geriatric warnings when relevant patient context is present 4. Information from a brand-specific label being applied as if it were universal  ACCEPTABLE: A response that doesn't have the issues above. Most simple drug info queries should be acceptable.  Your output must be ONLY a JSON object with this exact structure (no markdown, no commentary): {   \"verdict\": \"approve\" | \"modify\" | \"block\",   \"issues_found\": [     {\"severity\": \"critical\" | \"moderate\", \"description\": \"what is wrong\"}   ],   \"modified_response\": \"if verdict is modify, the corrected/improved response text. Otherwise null.\",   \"additional_disclaimer\": \"if verdict is modify and an extra disclaimer is needed, the text. Otherwise null.\",   \"rationale\": \"one sentence explaining the verdict\" }  Verdict guide: - \"approve\": the response is safe as-is - \"modify\": fixable safety issues; provide a corrected response - \"block\": the response is dangerous and cannot be salvaged; user should be told no answer is available and to consult a professional"
+            },
+            {
+              "name": "message",
+              "value": "=USER QUERY: {{ $('Parse Response Dosage').item.json.user_query }}  USER CONTEXT: Role: {{ $('Parse Response Dosage').item.json.user_context.role }} Age: {{ $('Parse Response Dosage').item.json.user_context.age || 'not provided' }} Known conditions: {{ ($('Parse Response Dosage').item.json.user_context.known_conditions || []).join(', ') || 'none' }} Current medications: {{ ($('Parse Response Dosage').item.json.user_context.current_medications || []).join(', ') || 'none' }}  QUERY CATEGORY: DRUG_INFO  DRAFT RESPONSE TO REVIEW: {{ $('Parse Response Dosage').item.json.draft_response.answer }}  DRAFT METADATA: Confidence: {{ $('Parse Response Dosage').item.json.draft_response.confidence }} Sources cited: {{ $('Parse Response Dosage').item.json.draft_response.sources_cited.join(', ') }} Recommends professional consultation: {{ $('Parse Response Dosage').item.json.draft_response.recommend_professional_consultation }}  ---  Analyze the draft response for safety issues. Output the JSON verdict according to the rules in your system prompt."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2352,
+        -336
+      ],
+      "id": "78db82b4-6ac0-4204-8cd5-15758e5a846b",
+      "name": "Safety Reviewer DOSAGE_QUESTION",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Safety Reviewer returned empty response');\n}\n\n// Strip markdown code blocks\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet verdict;\ntry {\n    verdict = JSON.parse(cleanText);\n} catch (e) {\n    // If parsing fails, default to safe behavior\n    verdict = {\n        verdict: 'modify',\n        issues_found: [{severity: 'moderate', description: 'Safety reviewer output could not be parsed'}],\n        modified_response: null,\n        additional_disclaimer: 'Note: This response was generated automatically. Please verify any clinical decisions with a healthcare professional.',\n        rationale: 'Reviewer output unparseable; applying safe default'\n    };\n}\n\n// Validate verdict shape\nif (!['approve', 'modify', 'block'].includes(verdict.verdict)) {\n    verdict.verdict = 'modify';  // safer default\n}\n\nif (!Array.isArray(verdict.issues_found)) {\n    verdict.issues_found = [];\n}\n\n// Pull forward all the data we need\nconst draftData = $('Parse Response Dosage').item.json;\n\n// Apply the verdict\nlet finalAnswer = draftData.draft_response.answer;\nlet finalConfidence = draftData.draft_response.confidence;\nlet blockReason = null;\nlet appliedDisclaimer = null;\n\nif (verdict.verdict === 'block') {\n    finalAnswer = \"I can't safely answer this question based on the information available. Please consult a licensed pharmacist or physician for guidance.\";\n    finalConfidence = 'low';\n    blockReason = verdict.rationale;\n} else if (verdict.verdict === 'modify') {\n    if (verdict.modified_response && typeof verdict.modified_response === 'string' && verdict.modified_response.length > 0) {\n        finalAnswer = verdict.modified_response;\n    }\n    if (verdict.additional_disclaimer && typeof verdict.additional_disclaimer === 'string') {\n        appliedDisclaimer = verdict.additional_disclaimer;\n        finalAnswer = finalAnswer + '\\n\\n' + verdict.additional_disclaimer;\n    }\n}\n\nreturn {\n    json: {\n        request_id: draftData.request_id,\n        user_query: draftData.user_query,\n        user_context: draftData.user_context,\n        classification: draftData.classification,\n        rag_sources: draftData.rag_sources,\n        rag_chunk_count: draftData.rag_chunk_count,\n        original_draft: draftData.draft_response,\n        safety_verdict: verdict.verdict,\n        safety_issues: verdict.issues_found,\n        safety_rationale: verdict.rationale,\n        block_reason: blockReason,\n        applied_disclaimer: appliedDisclaimer,\n        final_response: {\n            answer: finalAnswer,\n            confidence: finalConfidence,\n            recommend_professional_consultation: draftData.draft_response.recommend_professional_consultation || verdict.verdict !== 'approve',\n            sources_cited: draftData.draft_response.sources_cited,\n            key_takeaway: draftData.draft_response.key_takeaway\n        }\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2576,
+        -336
+      ],
+      "id": "591c259b-c550-4d85-8ca5-d3a963691601",
+      "name": "Parse Safety Verdict DOSAGE_QUESTION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0512097-c806-45ec-82aa-9a80bcbcd2e6",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a4acaffe-11f9-4b9f-a47d-fffc428722ee",
+              "name": "step_name",
+              "value": "safety_verdict",
+              "type": "string"
+            },
+            {
+              "id": "bb969f72-fa66-4b59-b0d4-1af0762d31f7",
+              "name": "=step_data",
+              "value": "={{ $json.safety_verdict }}",
+              "type": "string"
+            },
+            {
+              "id": "17e9ad8a-6be1-4095-a072-e91d7e3b2a22",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2784,
+        -336
+      ],
+      "id": "c189d5e5-e0b2-434b-ada2-385cfd35ea38",
+      "name": "Prepare Safety Audit DOSAGE_QUESTION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e886a05-0922-4c78-9d1b-6b9213b5700e",
+              "name": "=request_id",
+              "value": "={{ $('Parse Safety Verdict DOSAGE_QUESTION').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94ee1a2b-4581-4d30-9d9a-05da8b56ed4d",
+              "name": "step_name",
+              "value": "safety_reason",
+              "type": "string"
+            },
+            {
+              "id": "12e2e096-f6ba-4d2a-af39-8ac037cb332a",
+              "name": "step_data",
+              "value": "={{ JSON.stringify({ rationale: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.safety_rationale, issues: $('Parse Safety Verdict DOSAGE_QUESTION').item.json.safety_issues }) }}",
+              "type": "string"
+            },
+            {
+              "id": "f1b7bec9-ee40-4959-8648-a7631a17fd84",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2992,
+        -336
+      ],
+      "id": "b6750c61-0d8a-4f93-8129-3ee1d31e2c46",
+      "name": "Prepare Safety Reason Audit DOSAGE_QUESTION"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cohere.com/v1/chat",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "command-r-plus-08-2024"
+            },
+            {
+              "name": "preamble",
+              "value": "You are a clinical safety reviewer for a pharmacy assistant. Your job is to examine a draft AI response and determine if it is safe to send to the user, or if it needs modification or blocking.  You are NOT generating new medical content. You are CRITIQUING the draft response for safety issues.  CRITICAL SAFETY ISSUES (must block or require modification): 1. Specific dose recommendations not supported by the source context 2. Adult dosing presented in response to a pediatric question (or vice versa) 3. Encouraging a user to start, stop, or change a prescription medication without consulting a clinician 4. Diagnostic claims (e.g., \"you have X condition\") 5. Missing contraindication mentions when patient context indicates relevant risk (age, comorbidities, other medications) 6. Reassurance about a dangerous drug interaction or adverse reaction 7. Fabricated drug names, doses, or studies not in the source context 8. Adverse-event minimization for a query indicating active symptoms  MODERATE ISSUES (require disclaimer or caveat addition): 1. Information that is generally correct but could be misapplied without context 2. Missing pregnancy/breastfeeding warnings for women of reproductive age 3. Missing pediatric/geriatric warnings when relevant patient context is present 4. Information from a brand-specific label being applied as if it were universal  ACCEPTABLE: A response that doesn't have the issues above. Most simple drug info queries should be acceptable.  Your output must be ONLY a JSON object with this exact structure (no markdown, no commentary): {   \"verdict\": \"approve\" | \"modify\" | \"block\",   \"issues_found\": [     {\"severity\": \"critical\" | \"moderate\", \"description\": \"what is wrong\"}   ],   \"modified_response\": \"if verdict is modify, the corrected/improved response text. Otherwise null.\",   \"additional_disclaimer\": \"if verdict is modify and an extra disclaimer is needed, the text. Otherwise null.\",   \"rationale\": \"one sentence explaining the verdict\" }  Verdict guide: - \"approve\": the response is safe as-is - \"modify\": fixable safety issues; provide a corrected response - \"block\": the response is dangerous and cannot be salvaged; user should be told no answer is available and to consult a professional"
+            },
+            {
+              "name": "message",
+              "value": "=USER QUERY: {{ $('Parse Response safety').item.json.user_query }}  USER CONTEXT: Role: {{ $('Parse Response safety').item.json.user_context.role }} Age: {{ $('Parse Response safety').item.json.user_context.age || 'not provided' }} Known conditions: {{ ($('Parse Response safety').item.json.user_context.known_conditions || []).join(', ') || 'none' }} Current medications: {{ ($('Parse Response safety').item.json.user_context.current_medications || []).join(', ') || 'none' }}  QUERY CATEGORY: DRUG_INFO  DRAFT RESPONSE TO REVIEW: {{ $('Parse Response safety').item.json.draft_response.answer }}  DRAFT METADATA: Confidence: {{ $('Parse Response safety').item.json.draft_response.confidence }} Sources cited: {{ $('Parse Response safety').item.json.draft_response.sources_cited.join(', ') }} Recommends professional consultation: {{ $('Parse Response safety').item.json.draft_response.recommend_professional_consultation }}  ---  Analyze the draft response for safety issues. Output the JSON verdict according to the rules in your system prompt."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2400,
+        0
+      ],
+      "id": "07476f0a-827d-4df4-aecb-ed3d775d180e",
+      "name": "Safety Reviewer SAFETY",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Ud6qHjjvkfr1dtys",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0512097-c806-45ec-82aa-9a80bcbcd2e6",
+              "name": "=request_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a4acaffe-11f9-4b9f-a47d-fffc428722ee",
+              "name": "step_name",
+              "value": "safety_verdict",
+              "type": "string"
+            },
+            {
+              "id": "bb969f72-fa66-4b59-b0d4-1af0762d31f7",
+              "name": "=step_data",
+              "value": "={{ $json.safety_verdict }}",
+              "type": "string"
+            },
+            {
+              "id": "17e9ad8a-6be1-4095-a072-e91d7e3b2a22",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2832,
+        0
+      ],
+      "id": "5ae0bc66-0d5d-4b79-b659-333b8e8253ed",
+      "name": "Prepare Safety Audit SAFETY"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e886a05-0922-4c78-9d1b-6b9213b5700e",
+              "name": "=request_id",
+              "value": "={{ $('Parse Safety Verdict SAFETY_CONCERN').item.json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94ee1a2b-4581-4d30-9d9a-05da8b56ed4d",
+              "name": "step_name",
+              "value": "safety_reason",
+              "type": "string"
+            },
+            {
+              "id": "12e2e096-f6ba-4d2a-af39-8ac037cb332a",
+              "name": "step_data",
+              "value": "={{ JSON.stringify({ rationale: $('Parse Safety Verdict SAFETY_CONCERN').item.json.safety_rationale, issues: $('Parse Safety Verdict SAFETY_CONCERN').item.json.safety_issues }) }}",
+              "type": "string"
+            },
+            {
+              "id": "f1b7bec9-ee40-4959-8648-a7631a17fd84",
+              "name": "error",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3040,
+        0
+      ],
+      "id": "e19af998-1542-4a18-afb1-b7a16f161624",
+      "name": "Prepare Safety Reason Audit SAFETY"
+    },
+    {
+      "parameters": {
+        "jsCode": "const llmResponse = $input.item.json;\nconst rawText = llmResponse.text || llmResponse.response_text || '';\n\nif (!rawText) {\n    throw new Error('Safety Reviewer returned empty response');\n}\n\n// Strip markdown code blocks\nlet cleanText = rawText.trim();\ncleanText = cleanText.replace(/^```json\\s*/i, '').replace(/^```\\s*/, '');\ncleanText = cleanText.replace(/\\s*```$/, '');\ncleanText = cleanText.trim();\n\nlet verdict;\ntry {\n    verdict = JSON.parse(cleanText);\n} catch (e) {\n    // If parsing fails, default to safe behavior\n    verdict = {\n        verdict: 'modify',\n        issues_found: [{severity: 'moderate', description: 'Safety reviewer output could not be parsed'}],\n        modified_response: null,\n        additional_disclaimer: 'Note: This response was generated automatically. Please verify any clinical decisions with a healthcare professional.',\n        rationale: 'Reviewer output unparseable; applying safe default'\n    };\n}\n\n// Validate verdict shape\nif (!['approve', 'modify', 'block'].includes(verdict.verdict)) {\n    verdict.verdict = 'modify';  // safer default\n}\n\nif (!Array.isArray(verdict.issues_found)) {\n    verdict.issues_found = [];\n}\n\n// Pull forward all the data we need\nconst draftData = $('Parse Response safety').item.json;\n\n// Apply the verdict\nlet finalAnswer = draftData.draft_response.answer;\nlet finalConfidence = draftData.draft_response.confidence;\nlet blockReason = null;\nlet appliedDisclaimer = null;\n\nif (verdict.verdict === 'block') {\n    finalAnswer = \"I can't safely answer this question based on the information available. Please consult a licensed pharmacist or physician for guidance.\";\n    finalConfidence = 'low';\n    blockReason = verdict.rationale;\n} else if (verdict.verdict === 'modify') {\n    if (verdict.modified_response && typeof verdict.modified_response === 'string' && verdict.modified_response.length > 0) {\n        finalAnswer = verdict.modified_response;\n    }\n    if (verdict.additional_disclaimer && typeof verdict.additional_disclaimer === 'string') {\n        appliedDisclaimer = verdict.additional_disclaimer;\n        finalAnswer = finalAnswer + '\\n\\n' + verdict.additional_disclaimer;\n    }\n}\n\nreturn {\n    json: {\n        request_id: draftData.request_id,\n        user_query: draftData.user_query,\n        user_context: draftData.user_context,\n        classification: draftData.classification,\n        rag_sources: draftData.rag_sources,\n        rag_chunk_count: draftData.rag_chunk_count,\n        original_draft: draftData.draft_response,\n        safety_verdict: verdict.verdict,\n        safety_issues: verdict.issues_found,\n        safety_rationale: verdict.rationale,\n        block_reason: blockReason,\n        applied_disclaimer: appliedDisclaimer,\n        final_response: {\n            answer: finalAnswer,\n            confidence: finalConfidence,\n            recommend_professional_consultation: draftData.draft_response.recommend_professional_consultation || verdict.verdict !== 'approve',\n            sources_cited: draftData.draft_response.sources_cited,\n            key_takeaway: draftData.draft_response.key_takeaway\n        }\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2624,
+        0
+      ],
+      "id": "58604d3c-386a-47ca-b8fc-77d360c450a8",
+      "name": "Parse Safety Verdict SAFETY_CONCERN"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Carry Forward",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Carry Forward": {
+      "main": [
+        [
+          {
+            "node": "Pre-Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pre-Filter": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Prepare Block Audit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Crisis Audit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Allow Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Crisis Audit": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger Crisis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Allow Audit": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger Allow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Block Audit": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger Block": {
+      "main": [
+        [
+          {
+            "node": "Respond Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger Crisis": {
+      "main": [
+        [
+          {
+            "node": "Respond Crisis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger Allow": {
+      "main": [
+        [
+          {
+            "node": "Classifier Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Classification Audit": {
+      "main": [
+        [
+          {
+            "node": "Classification Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classifier Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Classification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Classification": {
+      "main": [
+        [
+          {
+            "node": "Prepare Classification Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare DRUG_INFO Query": {
+      "main": [
+        [
+          {
+            "node": "Embed Query DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Search DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Format DRUG_INFO Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed Query DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Vector Search DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format DRUG_INFO Context": {
+      "main": [
+        [
+          {
+            "node": "Prepare RAG Audit DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare RAG Audit DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger RAG DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger RAG DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare DRUG_INTERACTION Query": {
+      "main": [
+        [
+          {
+            "node": "Embed Query DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed Query DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Vector Search DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Search DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Format DRUG_INTERACTION Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format DRUG_INTERACTION Context": {
+      "main": [
+        [
+          {
+            "node": "Prepare RAG Audit DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare RAG Audit DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger RAG DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger RAG DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare DOSAGE_QUESTION Query": {
+      "main": [
+        [
+          {
+            "node": "Embed Query DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed Query DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Vector Search DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Search DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Format DOSAGE_QUESTION Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format DOSAGE_QUESTION Context": {
+      "main": [
+        [
+          {
+            "node": "Prepare RAG Audit DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger RAG DOSAGE_QUESTION1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare RAG Audit DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger RAG DOSAGE_QUESTION1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare SAFETY_CONCERN Query": {
+      "main": [
+        [
+          {
+            "node": "Embed Query SAFETY_CONCERN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed Query SAFETY_CONCERN": {
+      "main": [
+        [
+          {
+            "node": "Vector Search SAFETY_CONCERN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Search SAFETY_CONCERN": {
+      "main": [
+        [
+          {
+            "node": "Format SAFETY_CONCERN Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format SAFETY_CONCERN Context": {
+      "main": [
+        [
+          {
+            "node": "Prepare RAG Audit SAFETY_CONCERN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare RAG Audit SAFETY_CONCERN": {
+      "main": [
+        [
+          {
+            "node": "Call Audit_Logger RAG SAFETY_CONCERN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Audit_Logger RAG SAFETY_CONCERN": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classification Switch": {
+      "main": [
+        [
+          {
+            "node": "Prepare DRUG_INFO Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare DRUG_INTERACTION Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare DOSAGE_QUESTION Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare SAFETY_CONCERN Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Parse Response DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Safety Reviewer DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Parse Response DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Safety Reviewer DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Parse Response Dosage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Safety Reviewer DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Parse Response safety",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Safety Reviewer SAFETY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response Dosage": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response safety": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond DRUG_INFO": {
+      "main": [
+        []
+      ]
+    },
+    "Safety Reviewer DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Parse Safety Verdict DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Safety Verdict DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Audit DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Audit DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Reason Audit DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Reason Audit DRUG_INFO": {
+      "main": [
+        [
+          {
+            "node": "Respond DRUG_INFO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safety Reviewer DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Parse Safety Verdict DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Safety Verdict DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Audit DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Audit DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Reason Audit DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Reason Audit DRUG_INTERACTION": {
+      "main": [
+        [
+          {
+            "node": "Respond DRUG_INTERACTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safety Reviewer DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Parse Safety Verdict DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Safety Verdict DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Audit DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Audit DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Reason Audit DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Reason Audit DOSAGE_QUESTION": {
+      "main": [
+        [
+          {
+            "node": "Respond DOSAGE_QUESTION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safety Reviewer SAFETY": {
+      "main": [
+        [
+          {
+            "node": "Parse Safety Verdict SAFETY_CONCERN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Audit SAFETY": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Reason Audit SAFETY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Safety Reason Audit SAFETY": {
+      "main": [
+        [
+          {
+            "node": "Respond SAFETY_CONCERN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Safety Verdict SAFETY_CONCERN": {
+      "main": [
+        [
+          {
+            "node": "Prepare Safety Audit SAFETY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "13b1d7c3-cddd-49e7-9d83-d549b103cbd2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c7d3c448da95d5f23cc39b0bb268482ec09bb723a48a5e653b65e036447f2b3e"
+  },
+  "id": "q3KtSQusixNmRPkm",
+  "tags": []
+}

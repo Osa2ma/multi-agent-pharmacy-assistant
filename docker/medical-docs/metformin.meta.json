@@ -1,0 +1,29 @@
+{
+  "drug_query": "metformin",
+  "generic_names": [
+    "SITAGLIPTIN AND METFORMIN HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "ZITUVIMET"
+  ],
+  "manufacturer_names": [
+    "Zydus Lifesciences Limited"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "861769",
+    "861819",
+    "2677162",
+    "2677164"
+  ],
+  "spl_id": "3bf9383a-afe0-4989-b952-50c995bd3fa5",
+  "spl_set_id": "0098dec4-f0e5-45d5-8aa4-5d0faf9ab142",
+  "effective_time": "20250609",
+  "fetched_at": "2026-05-02T20:48:21.464696Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

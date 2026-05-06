@@ -1,0 +1,34 @@
+{
+  "drug_query": "warfarin",
+  "generic_names": [
+    "WARFARIN SODIUM"
+  ],
+  "brand_names": [
+    "Warfarin Sodium"
+  ],
+  "manufacturer_names": [
+    "Teva Pharmaceuticals USA, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "855288",
+    "855296",
+    "855302",
+    "855312",
+    "855318",
+    "855324",
+    "855332",
+    "855338",
+    "855344"
+  ],
+  "spl_id": "b8c33971-54b3-4971-bf7f-1bec66999a29",
+  "spl_set_id": "0cbce382-9c88-4f58-ae0f-532a841e8f95",
+  "effective_time": "20250617",
+  "fetched_at": "2026-05-02T20:49:16.240547Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,27 @@
+{
+  "drug_query": "bisoprolol",
+  "generic_names": [
+    "BISOPROLOL FUMARATE"
+  ],
+  "brand_names": [
+    "Bisoprolol fumarate"
+  ],
+  "manufacturer_names": [
+    "Solco Healthcare US, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "854901",
+    "854905"
+  ],
+  "spl_id": "e8b6cea1-8a7f-4255-8a24-ff96d6ceece2",
+  "spl_set_id": "084308e4-3b8b-40d6-acbf-d775772a8a73",
+  "effective_time": "20230626",
+  "fetched_at": "2026-05-02T20:48:54.539862Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

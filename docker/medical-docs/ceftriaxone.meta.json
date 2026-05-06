@@ -1,0 +1,30 @@
+{
+  "drug_query": "ceftriaxone",
+  "generic_names": [
+    "CEFTRIAXONE SODIUM"
+  ],
+  "brand_names": [
+    "Ceftriaxone Sodium"
+  ],
+  "manufacturer_names": [
+    "Hospira, Inc"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "INTRAMUSCULAR",
+    "INTRAVENOUS"
+  ],
+  "rxcui": [
+    "309092",
+    "1665005",
+    "1665021",
+    "1665046"
+  ],
+  "spl_id": "cc7743b1-4e7b-446a-9ec1-cc234a8bbccf",
+  "spl_set_id": "03283208-8616-4117-9d2b-aa8046017a4f",
+  "effective_time": "20260119",
+  "fetched_at": "2026-05-02T20:49:55.267042Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

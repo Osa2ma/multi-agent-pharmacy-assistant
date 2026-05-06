@@ -1,0 +1,26 @@
+{
+  "drug_query": "fexofenadine",
+  "generic_names": [
+    "FEXOFENADINE HCL"
+  ],
+  "brand_names": [
+    "Fexofenadine HCL"
+  ],
+  "manufacturer_names": [
+    "CVS"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "997420"
+  ],
+  "spl_id": "46540fb6-3247-8ddd-e063-6394a90ae0cb",
+  "spl_set_id": "00ef8467-30a0-7579-e063-6294a90a75af",
+  "effective_time": "20251219",
+  "fetched_at": "2026-05-02T20:50:49.832002Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

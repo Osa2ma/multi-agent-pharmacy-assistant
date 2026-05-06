@@ -1,0 +1,26 @@
+{
+  "drug_query": "pantoprazole",
+  "generic_names": [
+    "PANTOPRAZOLE SODIUM"
+  ],
+  "brand_names": [
+    "Pantoprazole Sodium"
+  ],
+  "manufacturer_names": [
+    "Meitheal Pharmaceuticals Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "INTRAVENOUS"
+  ],
+  "rxcui": [
+    "283669"
+  ],
+  "spl_id": "48bbc577-3242-4da3-bca3-7a5f89105415",
+  "spl_set_id": "014f9762-6948-46b7-8659-5c89f35ad8bf",
+  "effective_time": "20250627",
+  "fetched_at": "2026-05-02T20:50:14.371753Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

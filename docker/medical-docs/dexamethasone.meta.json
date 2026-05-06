@@ -1,0 +1,26 @@
+{
+  "drug_query": "dexamethasone",
+  "generic_names": [
+    "DEXAMETHASONE"
+  ],
+  "brand_names": [
+    "Dexamethasone"
+  ],
+  "manufacturer_names": [
+    "Advanced Rx Pharmacy of Tennessee, LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197580"
+  ],
+  "spl_id": "4250a0b0-e539-57c9-e063-6294a90a4b55",
+  "spl_set_id": "01cfaa3e-5e30-18fa-e063-6394a90a084e",
+  "effective_time": "20251029",
+  "fetched_at": "2026-05-02T20:51:52.740509Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

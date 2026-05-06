@@ -1,0 +1,100 @@
+{
+  "openfda": {
+    "brand_name": [
+      "Integra F"
+    ],
+    "generic_name": [
+      "FERROUS FUMARATE AND POLYSACCHRIDE IRON COMPLEX AND FOLIC ACID"
+    ],
+    "manufacturer_name": [
+      "U.S. Pharmaceutical Corporation"
+    ],
+    "product_ndc": [
+      "52747-711"
+    ],
+    "product_type": [
+      "HUMAN PRESCRIPTION DRUG"
+    ],
+    "route": [
+      "ORAL"
+    ],
+    "substance_name": [
+      "ASCORBIC ACID",
+      "FERROUS ASPARTO GLYCINATE",
+      "FERROUS FUMARATE",
+      "FOLIC ACID",
+      "NIACIN"
+    ],
+    "rxcui": [
+      "999823",
+      "999826"
+    ],
+    "spl_id": [
+      "7aa8c3c6-7a91-4217-9e48-e1dfcf938060"
+    ],
+    "spl_set_id": [
+      "025fee85-53a8-4161-a806-44fd95d0ca74"
+    ],
+    "package_ndc": [
+      "52747-711-60",
+      "52747-711-30"
+    ],
+    "is_original_packager": [
+      true
+    ],
+    "nui": [
+      "N0000193618",
+      "M0001797",
+      "N0000175594",
+      "M0014839"
+    ],
+    "pharm_class_epc": [
+      "Vitamin C [EPC]",
+      "Nicotinic Acid [EPC]"
+    ],
+    "pharm_class_cs": [
+      "Ascorbic Acid [CS]",
+      "Nicotinic Acids [CS]"
+    ],
+    "unii": [
+      "PQ6CK8PD0R",
+      "H7426RGB3L",
+      "R5L488RY0Q",
+      "935E97BOY8",
+      "2679MF687A"
+    ]
+  },
+  "indications_and_usage": [
+    "INDICATIONS: Integra FTM is indicated for the treatment of iron deficiency anemia, and folate deficiency anemia. Integra FTM is indicated in pregnancy for the prevention and treatment of iron deficiency and to supply a maintenance dosage of folic acid."
+  ],
+  "dosage_and_administration": [
+    "DOSAGE AND ADMINISTRATION: Adults (persons over 12 years of age), One (1) capsule daily, between meals, or as prescribed by a physician. Do not exceed recommended dosage. Do not administer to children under the age of 12."
+  ],
+  "contraindications": [
+    "CONTRAINDICATIONS: Integra FTM is contraindicated in patients with known hypersensitivity to any of its ingredients; also, all iron compounds are contraindicated in patients with hemosiderosis, hemochromatosis, or hemolytic anemias. Pernicious anemia is a contraindication, as folic acid may obscure its signs and symptoms."
+  ],
+  "warnings_and_cautions": [
+    "WARNING: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6. Keep this product out of reach of children. In case of accidental overdose, call a doctor or poison control center immediately. WARNING: Folic acid alone is improper therapy in the treatment for pernicious anemia and other megaloblastic anemias where Vitamin B12 is deficient. PRECAUTIONS: General: Anemia is a manifestation that requires appropriate investigation to determine its cause or causes. No single regimen fits all cases and the status of the patient observed in follow-up is the final criterion for adequacy of therapy. Periodic clinical and laboratory studies are considered essential. Blood examinations including hemoglobin and hematacrit should be done at the usual intervals to make certain that therapy is adequate. Use with care in the presence of peptic ulcer, regional enteritis, and ulcerative colitis. Folic acid, especially in doses above 0.1 mg -0.4 mg daily may obscure pernicious anemia, in that hematological remission can occur while neurological manifestations remain progressive."
+  ],
+  "adverse_reactions": [
+    "Adverse Reactions: Folic Acid: Allergic sensitizations have been reported following both oral and parenteral administration of folic acid. Ferrous Fumarate: Gastrointestinal disturbances (anorexia, nausea, diarrhea, constipation, heartburn and vomiting) occur occasionally, but are usually mild and may subside with continuation of therapy. Reducing the dose and administering it with meals will minimize these effects in the sensitive patient. Increasing fiber in the diet can relieve constipation. Iron may turn stools black. This is a harmless effect that is a result of unabsorbed iron. Although the absorption of iron is best when taken between meals, giving Integra FTM after meals may control occasional G.I. disturbances. Integra FTM is best absorbed when taken at bedtime."
+  ],
+  "pregnancy": [
+    "USAGE IN PREGNANCY: Before Integra FTM is prescribed for megaloblastic anemia in pregnancy, appropriate diagnostic exclusion of Addisonian pernicious anemia, (due to faulty or blocked absorption of vitamin B12, or extrinsic factor or either a genetic, immunological or surgical basis) should be carried out."
+  ],
+  "pediatric_use": [
+    "Pediatric Use: Safety and effectiveness of this product have not been established in pediatric patients."
+  ],
+  "geriatric_use": [
+    "Geriatric Use: No clinical studies have been performed in patients age 65 and over to determine whether older persons respond differently from younger persons. Dosage should always begin at the low end of the dosage scale and should consider that elderly persons may have decreased hepatic, renal, or cardiac function and or concomitant diseases."
+  ],
+  "overdosage": [
+    "OVERDOSE: Iron: Signs and Symptoms: Iron is toxic. Acute overdosage of iron may cause nausea and vomiting and, in severe cases, cardiovascular collapse and death. Other symptoms include pallor and cyanosis, melena, shock, drowsiness and coma. The estimated overdose of orally ingested iron is 300-mg/kg body weight. When overdoses are ingested by children, severe reactions, including fatalities, have resulted. Integra FTM should be stored beyond the reach of children to prevent against accidental iron poisoning. Keep this and all other drugs out of the reach of children. Treatment: For specific therapy, exchange transfusion and chelating agents should be used. For general management, perform gastric lavage with sodium bicarbonate solution or milk. Administer intravenous fluids and electrolytes and use oxygen."
+  ],
+  "clinical_pharmacology": [
+    "CLINICAL PHARMACOLOGY: Integra FTM is unique in that it utilizes two (2) different forms of iron, i.e., Ferrous Fumarate and Polysaccharide Iron Complex (as cell-contracted akaganèite), making available a total of 125 mg of elemental iron per capsule as follows: Ferrous Fumarate (anhydrous) 191.1 mg Polysaccharide iron complex (PIC) 135.9 mg Ferrous Fumarate: Provides about 62.5 mg of elemental iron per dose. Ferrous Fumarate is an anhydrous salt of a combination of ferrous iron and fumaric acid, containing 33% of iron per weight. The acute toxicity in experimental animals is low and Ferrous Fumarate is well tolerated clinically. As a ferrous salt, it is more efficiently absorbed in the duodenum. Ferrous Fumarate contrasts very favorably with the availability of the 20% of elemental iron of ferrous sulfate, and the 13% of elemental iron of ferrous gluconate. Polysaccharide Iron Complex: Provides about 62.5 mg elemental iron, as a cell-contracted akaganèite. It is a product of ferric iron complexed to a low molecular weight polysaccharide. This polysaccharide is produced by the extensive hydrolysis of starch and is a dark brown powder that dissolves in water to form a very dark brown solution, which is virtually odorless and tasteless. Folic Acid: Folic Acid is one of the important hematopoetic agents necessary for proper regeneration of the blood-forming elements and their function. Folic acid is a precursor of a large family of compounds which serve as coenzymes in carbon transfer reactions. These reactions are required for the synthesis of purine and pyrimidine bases, inter-conversion of glycine and serine, biosynthesis of methionine methyl groups and degradation of histidine. Additionally, folic acid increases jejunal glycolytic enzymes and is involved in the desaturation and hydroxylation of long-chain fatty acids in the brain. A deficiency in folic acid results in megaloblastic anemia. All IntegraTM products include a unique patented source of iron, e.g. Ferrous Fumarate and Polysaccharide Iron Complex (U.S. Patent No: 11/243,043 Pending). \"An increase in tolerability is observed with the (patented formulation) and is believed to occur as the result of distributing the total iron content in the composition among compounds that provide iron to the patient's blood stream via two different mechanisms. The ferrous salts are readily absorbed in the upper gut, by direct dissolution and absorption of the ferrous iron by the bloodstream. However, the iron available from PIC is absorbed in the lower gut, via an active protein transport mechanism\"."
+  ],
+  "how_supplied": [
+    "HOW SUPPLIED: Integra F TM are maroon Vcaps ® capsules printed in white with \"Integra F\" on the cap and \"US\" logo on the body. Packed in child resistant caps and light resistant bottles of 90 capsules (52747-0711-60) and 30 capsules (52747-0711-30). The listed product numbers are not National Drug Codes. Instead, US Pharmaceutical Corporation has assigned these product codes formatted according to standard industry practice to meet the formatting requirements of pharmacy and healthcare insurance computer systems. CAUTION: Rx only."
+  ]
+}

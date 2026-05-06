@@ -1,0 +1,26 @@
+{
+  "drug_query": "risperidone",
+  "generic_names": [
+    "RISPERIDONE"
+  ],
+  "brand_names": [
+    "RISPERIDONE"
+  ],
+  "manufacturer_names": [
+    "REMEDYREPACK INC."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "312830"
+  ],
+  "spl_id": "47f4f928-6316-1f11-e063-6394a90ab1bb",
+  "spl_set_id": "03d3b52d-3a7d-4595-84c9-332da6ca9171",
+  "effective_time": "20260109",
+  "fetched_at": "2026-05-02T20:51:23.227640Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

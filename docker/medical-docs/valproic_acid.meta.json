@@ -1,0 +1,26 @@
+{
+  "drug_query": "valproic acid",
+  "generic_names": [
+    "VALPROIC ACID"
+  ],
+  "brand_names": [
+    "Valproic Acid"
+  ],
+  "manufacturer_names": [
+    "NorthStar Rx LLC"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1099687"
+  ],
+  "spl_id": "1286acbf-3497-5aed-e063-6294a90af8be",
+  "spl_set_id": "1286ab49-fa34-488e-e063-6394a90ad582",
+  "effective_time": "20240527",
+  "fetched_at": "2026-05-02T20:51:40.944140Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

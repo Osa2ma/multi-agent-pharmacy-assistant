@@ -1,0 +1,28 @@
+{
+  "drug_query": "duloxetine",
+  "generic_names": [
+    "DULOXETINE HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Duloxetine Delayed-Release"
+  ],
+  "manufacturer_names": [
+    "Golden State Medical Supply, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "596926",
+    "596930",
+    "596934"
+  ],
+  "spl_id": "30de843c-548f-4ced-e063-6394a90aac20",
+  "spl_set_id": "00628e5e-4c5b-2573-e063-6294a90a0e3b",
+  "effective_time": "20250321",
+  "fetched_at": "2026-05-02T20:51:04.591164Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

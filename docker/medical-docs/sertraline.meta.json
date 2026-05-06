@@ -1,0 +1,26 @@
+{
+  "drug_query": "sertraline",
+  "generic_names": [
+    "SERTRALINE HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Sertraline Hydrochloride"
+  ],
+  "manufacturer_names": [
+    "Proficient Rx LP"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "312940"
+  ],
+  "spl_id": "7731d02d-7220-4f43-b230-9d38875f4192",
+  "spl_set_id": "00179766-980b-44b0-99d3-1fee2bb27e37",
+  "effective_time": "20191101",
+  "fetched_at": "2026-05-02T20:50:54.241940Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

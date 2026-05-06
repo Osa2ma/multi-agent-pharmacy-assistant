@@ -1,0 +1,26 @@
+{
+  "drug_query": "pregabalin",
+  "generic_names": [
+    "PREGABALIN"
+  ],
+  "brand_names": [
+    "PREGABALIN"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "483440"
+  ],
+  "spl_id": "4ac3a79c-4251-45e4-91c4-29396d131e78",
+  "spl_set_id": "0101cd1f-4a95-40e9-86a8-ccde8d656e3d",
+  "effective_time": "20250923",
+  "fetched_at": "2026-05-02T20:51:33.333254Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

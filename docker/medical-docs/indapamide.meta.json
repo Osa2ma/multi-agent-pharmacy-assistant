@@ -1,0 +1,27 @@
+{
+  "drug_query": "indapamide",
+  "generic_names": [
+    "INDAPAMIDE"
+  ],
+  "brand_names": [
+    "Indapamide"
+  ],
+  "manufacturer_names": [
+    "Rising Pharma Holdings, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197815",
+    "197816"
+  ],
+  "spl_id": "7c1bd14b-7f8f-4ad6-9c3c-e6a0d9aad1cf",
+  "spl_set_id": "0687ed93-4761-4f9c-887d-95309c03f60e",
+  "effective_time": "20230626",
+  "fetched_at": "2026-05-02T20:49:05.688271Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

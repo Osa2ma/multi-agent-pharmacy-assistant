@@ -1,0 +1,26 @@
+{
+  "drug_query": "trazodone",
+  "generic_names": [
+    "TRAZODONE HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Trazodone Hydrochloride"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "856377"
+  ],
+  "spl_id": "30db7ddc-f345-457d-a04f-1258502e147e",
+  "spl_set_id": "007f38e0-653b-43e4-a1c1-b59997b2762a",
+  "effective_time": "20230830",
+  "fetched_at": "2026-05-02T20:51:07.856854Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

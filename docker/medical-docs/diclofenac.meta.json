@@ -1,0 +1,26 @@
+{
+  "drug_query": "diclofenac",
+  "generic_names": [
+    "DICLOFENAC SODIUM"
+  ],
+  "brand_names": [
+    "Diclofenac Sodium"
+  ],
+  "manufacturer_names": [
+    "NuCare Pharmaceuticals,Inc."
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "TOPICAL"
+  ],
+  "rxcui": [
+    "855633"
+  ],
+  "spl_id": "1e6ba7b2-299c-67cc-e063-6294a90a589d",
+  "spl_set_id": "005299ac-b6de-511f-e063-6294a90a29e0",
+  "effective_time": "20240729",
+  "fetched_at": "2026-05-02T20:49:27.704693Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

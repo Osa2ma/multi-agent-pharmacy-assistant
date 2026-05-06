@@ -1,0 +1,26 @@
+{
+  "drug_query": "sildenafil",
+  "generic_names": [
+    "SILDENAFIL CITRATE"
+  ],
+  "brand_names": [
+    "SILDENAFIL CITRATE"
+  ],
+  "manufacturer_names": [
+    "PD-Rx Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "314228"
+  ],
+  "spl_id": "31f67f3f-1e54-b8f7-e063-6294a90ae30e",
+  "spl_set_id": "00ee09dd-2de0-4dc4-85f6-b51ed6eabd5b",
+  "effective_time": "20250404",
+  "fetched_at": "2026-05-02T20:52:01.216030Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

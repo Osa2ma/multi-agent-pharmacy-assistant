@@ -1,0 +1,26 @@
+{
+  "drug_query": "furosemide",
+  "generic_names": [
+    "FUROSEMIDE"
+  ],
+  "brand_names": [
+    "Furosemide"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197732"
+  ],
+  "spl_id": "620c9a96-bc8b-4966-ab6d-3a77ecb29747",
+  "spl_set_id": "01a5f094-b473-4e46-9e61-69d5ec6dd766",
+  "effective_time": "20230301",
+  "fetched_at": "2026-05-02T20:49:02.012979Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

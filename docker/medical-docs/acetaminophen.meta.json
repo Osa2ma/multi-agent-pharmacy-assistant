@@ -1,0 +1,26 @@
+{
+  "drug_query": "acetaminophen",
+  "generic_names": [
+    "ACETAMINOPHEN"
+  ],
+  "brand_names": [
+    "Pain Reliever Extra Strength"
+  ],
+  "manufacturer_names": [
+    "Valu Merchandisers Company"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198440"
+  ],
+  "spl_id": "ee8e3aa2-8550-41c7-9911-0723b3fb2f87",
+  "spl_set_id": "0005aafa-08f8-4990-a54d-cc097195708f",
+  "effective_time": "20260102",
+  "fetched_at": "2026-05-02T20:49:26.235441Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "chlorpheniramine",
+  "generic_names": [
+    "CHLORPHENIRAMINE MALEATE"
+  ],
+  "brand_names": [
+    "SPRINSOL"
+  ],
+  "manufacturer_names": [
+    "FORTUNE PHARMACAL COMPANY LIMITED"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "1363309"
+  ],
+  "spl_id": "43810cbb-1d34-d1ff-e063-6294a90a2b40",
+  "spl_set_id": "01a1a91e-04ba-4526-8946-10483932b30c",
+  "effective_time": "20251113",
+  "fetched_at": "2026-05-02T20:50:51.110709Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

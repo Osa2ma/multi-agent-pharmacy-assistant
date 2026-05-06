@@ -1,0 +1,26 @@
+{
+  "drug_query": "naproxen",
+  "generic_names": [
+    "NAPROXEN"
+  ],
+  "brand_names": [
+    "Naproxen"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198014"
+  ],
+  "spl_id": "8c45ef1f-f708-485b-bc20-60aa87ce6289",
+  "spl_set_id": "000155a8-709c-44e5-a75f-cd890f3a7caf",
+  "effective_time": "20260129",
+  "fetched_at": "2026-05-02T20:49:29.224537Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

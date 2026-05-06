@@ -1,0 +1,88 @@
+{
+  "openfda": {
+    "application_number": [
+      "ANDA077568"
+    ],
+    "brand_name": [
+      "ciprofloxacin"
+    ],
+    "generic_name": [
+      "CIPROFLOXACIN"
+    ],
+    "manufacturer_name": [
+      "Proficient Rx LP"
+    ],
+    "product_ndc": [
+      "71205-300"
+    ],
+    "product_type": [
+      "HUMAN PRESCRIPTION DRUG"
+    ],
+    "route": [
+      "OPHTHALMIC"
+    ],
+    "substance_name": [
+      "CIPROFLOXACIN HYDROCHLORIDE"
+    ],
+    "rxcui": [
+      "309307"
+    ],
+    "spl_id": [
+      "a797de06-c8be-4417-9bac-137dc4931c8b"
+    ],
+    "spl_set_id": [
+      "05b2836d-cd3d-4d7f-970c-66ec2d788667"
+    ],
+    "package_ndc": [
+      "71205-300-05"
+    ],
+    "original_packager_product_ndc": [
+      "69315-308"
+    ],
+    "upc": [
+      "0371205300050"
+    ],
+    "unii": [
+      "4BA73M5E37"
+    ]
+  },
+  "indications_and_usage": [
+    "INDICATIONS AND USAGE Ciprofloxacin Ophthalmic Solution is indicated for the treatment of infections caused by susceptible strains of the designated microorganisms in the conditions listed below: Corneal Ulcers: Pseudomonas aeruginosa Serratia marcescens * Staphylococcus aureus Staphylococcus epidermidis Streptococcus pneumoniae Streptococcus (Viridans Group) * Conjunctivitis: Haemophilus influenzae Staphylococcus aureus Staphylococcus epidermidis Streptococcus pneumoniae *Efficacy for this organism was studied in fewer than 10 infections."
+  ],
+  "dosage_and_administration": [
+    "DOSAGE AND ADMINISTRATION Corneal Ulcers: The recommended dosage regimen for the treatment of corneal ulcers is two drops into the affected eye every 15 minutes for the first six hours and then two drops into the affected eye every 30 minutes for the remainder of the first day. On the second day, instill two drops in the affected eye hourly. On the third through the fourteenth day, place two drops in the affected eye every four hours. Treatment may be continued after 14 days if corneal re-epithelialisation has not occurred. Bacterial Conjunctivitis: The recommended dosage regimen for the treatment of bacterial conjunctivitis is one or two drops instilled into the conjunctival sac(s) every two hours while awake for two days and one or two drops every four hours while awake for the next five days."
+  ],
+  "contraindications": [
+    "CONTRAINDICATIONS A history of hypersensitivity to ciprofloxacin or any other component of the medication is a contraindication to its use. A history of hypersensitivity to other quinolones may also contraindicate the use of ciprofloxacin."
+  ],
+  "warnings_and_cautions": [
+    "WARNINGS NOT FOR INJECTION INTO THE EYE. Serious and occasionally fatal hypersensitivity (anaphylactic) reactions, some following the first dose, have been reported in patients receiving systemic quinolone therapy. Some reactions were accompanied by cardiovascular collapse, loss of consciousness, tingling, pharyngeal or facial edema, dyspnea, urticaria, and itching. Only a few patients had a history of hypersensitivity reactions. Serious anaphylactic reactions require immediate emergency treatment with epinephrine and other resuscitation measures, including oxygen, intravenous fluids, intravenous antihistamines, corticosteroids, pressor amines and airway management, as clinically indicated. Remove contact lenses before using."
+  ],
+  "adverse_reactions": [
+    "ADVERSE REACTIONS The most frequently reported drug related adverse reaction was local burning or discomfort. In corneal ulcer studies with frequent administration of the drug, white crystalline precipitates were seen in approximately 17% of patients ( see Precautions ). Other reactions occurring in less than 10% of patients included lid margin crusting, crystals/scales, foreign body sensation, itching, conjunctival hyperemia and a bad taste following instillation. Additional events occurring in less than 1% of patients included corneal staining, keratopathy/keratitis, allergic reactions, lid edema, tearing, photophobia, corneal infiltrates, nausea and decreased vision. To report SUSPECTED ADVERSE REACTIONS, contact LEADING PHARMA AT 1-844-740-7500 or FDA at 1-800-FDA-1088 or www.fda.gov/medwatch"
+  ],
+  "drug_interactions": [
+    "Drug Interactions: Specific drug interaction studies have not been conducted with ophthalmic ciprofloxacin. However, the systemic administration of some quinolones has been shown to elevate plasma concentrations of theophylline, interfere with the metabolism of caffeine, enhance the effects of the oral anticoagulant, warfarin, and its derivatives, and has been associated with transient elevations in serum creatinine in patients receiving cyclosporine concomitantly."
+  ],
+  "nursing_mothers": [
+    "Nursing Mothers: It is not known whether topically applied ciprofloxacin is excreted in human milk. However, it is known that orally administered ciprofloxacin is excreted in the milk of lactating rats and oral ciprofloxacin has been reported in human breast milk after a single 500 mg dose. Caution should be exercised when Ciprofloxacin Ophthalmic Solution is administered to a nursing mother."
+  ],
+  "pediatric_use": [
+    "Pediatric Use: The safety and effectiveness of Ciprofloxacin ophthalmic solution 0.3% have been established in all ages. Use of Ciprofloxacin ophthalmic solution is supported by evidence from adequate and well controlled studies of Ciprofloxacin ophthalmic solution in adults, children and neonates [ see Clinical Studies ]. Although ciprofloxacin and other quinolones cause arthropathy in immature animals after oral administration, topical ocular administration of ciprofloxacin to immature animals did not cause any arthropathy and there is no evidence that the ophthalmic dosage form has any effect on the weight bearing joints."
+  ],
+  "geriatric_use": [
+    "Geriatric Use: No overall differences in safety or effectiveness have been observed between elderly and younger patients."
+  ],
+  "overdosage": [
+    "OVERDOSAGE A topical overdose of ciprofloxacin Ophthalmic Solution may be flushed from the eye(s) with warm tap water."
+  ],
+  "clinical_pharmacology": [
+    "CLINICAL PHARMACOLOGY Systemic Absorption: A systemic absorption study was performed in which Ciprofloxacin Ophthalmic Solution was administered in each eye every two hours while awake for two days followed by every four hours while awake for an additional 5 days. The maximum reported plasma concentration of ciprofloxacin was less than 5 ng/mL. The mean concentration was usually less than 2.5 ng/mL. Microbiology : Ciprofloxacin has in vitro activity against a wide range of gram-negative and gram-positive organisms. The bactericidal action of ciprofloxacin results from interference with the enzyme DNA gyrase which is needed for the synthesis of bacterial DNA. Ciprofloxacin has been shown to be active against most strains of the following organisms both in vitro and in clinical infections ( see Indications and Usage ): Gram-Positive: Staphylococcus aureus Staphylococcus epidermidis Streptococcus pneumoniae Streptococcus (Viridans Group) Gram-Negative: Haemophilus influenzae Pseudomonas aeruginosa Serratia marcescens Ciprofloxacin has been shown to be active in vitro against most strains of the following organisms, however, the clinical significance of these data is unknown: Gram-Positive: Enterococcus faecalis (Many strains are only moderately susceptible) Staphylococcus haemolyticus Staphylococcus hominis Staphylococcus saprophyticus Streptococcus pyogenes Gram-Negative Acinetobacter calcoaceticus subsp. anitratus Aeromonas caviae Aeromonas hydrophila Brucella melitensis Campylobacter coli Campylobacter jejuni Citrobacter diversus Citrobacter freundii Edwardsiella tarda Enterobacter aerogenes Enterobacter cloacae Escherichia coli Haemophilus ducreyi Haemophilus parainfluenzae Kiebsiella pneumoniae Klebsiella oxytoca Legionella pneumophila Moraxella (Branhamella) catarrhalis Morganella morganii Neisseria gonorrhoeae Neisseria meningitides Pasteurella multocida Proteus mirabilis Proteus vulgaris Providencia rettgeri Providencia stuartii Salmonella enteritidis Salmonella typhi Shigella sonneii Shigella flexneri Vibrio cholera Vibrio parahaemolyticus Vibrio vulnificus Yersinia enterocolitica Other Organisms: Chlamydia trachomatis (only moderately susceptible) and Mycobacterium tuberculosis (only moderately susceptible). Most strains of Pseudomonas cepacia and some strains of Pseudomonas maltophilia are resistant to ciprofloxacin as are most anaerobic bacteria, including Bacteroides fragilis and Clostridium difficile. The minimal bactericidal concentration (MBC) generally does not exceed the minimal inhibitory concentration (MIC) by more than a factor of 2. Resistance to ciprofloxacin in vitro usually develops slowly (multiple-step mutation). Ciprofloxacin does not cross-react with other antimicrobial agents such as beta-lactams or aminoglycosides; therefore, organisms resistant to these drugs may be susceptible to ciprofloxacin."
+  ],
+  "how_supplied": [
+    "HOW SUPPLIED As a sterile ophthalmic solution: 5 mL in translucent LDPE bottle with insert cap assembly comprising of a tan colored HDPE screw cap over a LDPE nozzle with tamper evident LDPE dust cover sealing the bottle cap. 5 mL – NDC 71205-300-05 STORAGE CONDITIONS Store at 25°C (77°F); excursions permitted 15°C to 30°C (59°F to 86°F) [See USP controlled room temperature]. Retain in carton until contents are used and protect from light. ANIMAL PHARMACOLOGY Ciprofloxacin and related drugs have been shown to cause arthropathy in immature animals of most species tested following oral administration. However, a one month topical ocular study using immature Beagle dogs did not demonstrate any articular lesions. CLINICAL STUDIES Following therapy with Ciprofloxacin ophthalmic solution, 76% of the patients with corneal ulcers and positive bacterial cultures were clinically cured and complete re-epithelialisation occurred in about 92% of the ulcers. In 3 and 7 day multicenter clinical trials, 52% of the patients with conjunctivitis and positive conjunctival cultures were clinically cured and 70-80% had all causative pathogens eradicated by the end of treatment. In a randomized, double-masked, multicenter, parallel-group clinical trial of pediatric patients with bacterial conjunctivitis, between birth and 31 days of age, patients were dosed with Ciprofloxacin ophthalmic solution or another anti-infective agent. Clinical outcomes for the trial demonstrated a clinical cure rate of 80% at Day 9 and a microbiological eradication success rate of 85% at Day 9. Please note that microbiologic eradication does not always correlate with clinical outcome in anti-infective trials. Rx Only Distributed by: Leading Pharma, LLC. Fairfield, NJ07004 Manufactured By: FDC Limited, B-8, MIDC Industrial Area, Waluj, Aurangabad - 431 136, Maharashtra, India Revision: 12/2017 STERILE OPHTHALMIC SOLUTION CIPROFLOXACIN OPHTHALMIC SOLUTION USP 0.3% as base INSTRUCTIONS FOR USE Read this Instruction for Use before you start using Ciprofloxacin ophthalmic solution and each time you get a refill. There may be new information. This information does not take the place of talking to your doctor about your medical condition or your treatment. Use Ciprofloxacin ophthalmic solution as prescribed by your doctor. Ask your doctor if you have questions about how to use Ciprofloxacin ophthalmic solution. Important information: • Ciprofloxacin ophthalmic solution is for use in the eye only. Ciprofloxacin ophthalmic solution should not be injected into the eye. • If you use other medicines in your eye, wait at least 10 minutes between using Ciprofloxacin ophthalmic solution and your other eye medicines. • If you wear contact lenses, remove them before using Ciprofloxacin ophthalmic solution. Wait at least 15 minutes after using Ciprofloxacin ophthalmic solution before placing your contact lenses back in your eyes. • Do not touch your eye, fingers, or other surfaces with the tip of the Ciprofloxacin ophthalmic solution bottle. You may get bacteria on the tip of the bottle that can cause you to get an eye infection. This eye infection can lead to serious eye damage or vision loss. If you think you have gotten bacteria on the tip of the bottle or you have an eye infection, call your doctor right away. • Wash your hands before each use. Before you use a bottle of Ciprofloxacin ophthalmic solution for the first time: • Check the expiration date on the bottle before use. Do not use Ciprofloxacin ophthalmic solution if the expiration date has passed. • Check that the seal on the dust cover is not broken or missing. Do not use the medicine if the seal is broken or missing. Call your doctor or pharmacist. Each time you use Ciprofloxacin ophthalmic solution: Step 1: Turn the dust cover clockwise to break the seal. Step 2: Remove the dust cover and throw it away. Step 3: Turn the tan coloured cap anti-clockwise and remove. Place the cap on a clean flat surface. Step 4: Tilt your head backwards. Step 5: Turn the bottle upside down and place the tip of the bottle close to your eye. Do not touch your eye with the tip. Pull your lower eyelid downward and look up. Gently squeeze the bottle and let 1 drop fall into the space between your lower eyelid and your eye. If a drop misses your eye, repeat Step 5. Step 6: Replace the tan coloured cap back on the bottle and turn it clockwise to close. Step 7: Remove any extra solution from skin around the eyes with a tissue. • If your doctor has told you to use drops in both eyes, repeat Step 5 for your other eye. • The Ciprofloxacin ophthalmic solution bottle tip is made to give a certain amount of medicine in 1 drop. Do not make the opening of the bottle tip bigger or you may get too much Ciprofloxacin ophthalmic solution. • After you use all of the doses of Ciprofloxacin ophthalmic solution that your doctor has prescribed, there will be some medicine left in the bottle. Do not use the extra medicine in the bottle. Throw the bottle away. How should I store Ciprofloxacin ophthalmic solution? • Store at 25°C (77°F); excursions permitted 15°C to 30°C (59°F to 86°F) [See USP controlled room temperature]. • Retain in carton until contents are used and protect from light Keep Ciprofloxacin ophthalmic solution and all medicines out of the reach of children. This Instruction for Use has been approved by the U.S. Food and Drug Administration. Distributed by: Leading Pharma, LLC. Fairfield, NJ07004 Manufactured By: FDC Limited, B-8, MIDC Industrial Area, Waluj, Aurangabad - 431 136, Maharashtra, India Relabeled By: Proficient Rx LP Thousand Oaks, CA 91320 Revision: 12/2017 Fig 1 fig 2 fig 2 fig 4 fig 5 fig 6 fig 7 fig 8"
+  ],
+  "information_for_patients": [
+    "Information for patients: Do not touch dropper tip to any surface, as this may contaminate the solution."
+  ]
+}

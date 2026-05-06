@@ -1,0 +1,26 @@
+{
+  "drug_query": "quetiapine",
+  "generic_names": [
+    "QUETIAPINE"
+  ],
+  "brand_names": [
+    "Quetiapine"
+  ],
+  "manufacturer_names": [
+    "Bryant Ranch Prepack"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "312743"
+  ],
+  "spl_id": "01261008-5f42-4844-8a65-d4545a67a309",
+  "spl_set_id": "01261008-5f42-4844-8a65-d4545a67a309",
+  "effective_time": "20250627",
+  "fetched_at": "2026-05-02T20:51:27.032189Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

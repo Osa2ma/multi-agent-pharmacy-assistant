@@ -1,0 +1,26 @@
+{
+  "drug_query": "budesonide",
+  "generic_names": [
+    "BUDESONIDE"
+  ],
+  "brand_names": [
+    "Budesonide"
+  ],
+  "manufacturer_names": [
+    "Rugby Laboratories"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "NASAL"
+  ],
+  "rxcui": [
+    "1797929"
+  ],
+  "spl_id": "ce26c1bb-c50d-7731-6877-0b8a5fda98df",
+  "spl_set_id": "04eb9e98-1323-353f-3fd7-2d317dfac526",
+  "effective_time": "20260227",
+  "fetched_at": "2026-05-02T20:50:42.528485Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

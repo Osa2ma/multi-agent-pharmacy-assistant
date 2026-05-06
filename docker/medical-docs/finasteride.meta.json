@@ -1,0 +1,26 @@
+{
+  "drug_query": "finasteride",
+  "generic_names": [
+    "FINASTERIDE"
+  ],
+  "brand_names": [
+    "Finasteride"
+  ],
+  "manufacturer_names": [
+    "Camber Pharmaceuticals, Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "200172"
+  ],
+  "spl_id": "0ebbabf3-0681-484d-ab8d-58e670d80a0d",
+  "spl_set_id": "00e934bb-c15b-490a-a852-839689a1231a",
+  "effective_time": "20170728",
+  "fetched_at": "2026-05-02T20:51:59.465512Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "loratadine",
+  "generic_names": [
+    "LORATADINE"
+  ],
+  "brand_names": [
+    "allergy relief"
+  ],
+  "manufacturer_names": [
+    "CVS Pharmacy"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "311372"
+  ],
+  "spl_id": "4fd50f17-7237-4659-bad6-a9e6189fa37c",
+  "spl_set_id": "0038bc38-c205-4d8d-ab78-1abbcd76829e",
+  "effective_time": "20260225",
+  "fetched_at": "2026-05-02T20:50:47.067844Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

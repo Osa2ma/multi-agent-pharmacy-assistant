@@ -1,0 +1,26 @@
+{
+  "drug_query": "lisinopril",
+  "generic_names": [
+    "LISINOPRIL AND HYDROCHLOROTHIAZIDE TABLETS"
+  ],
+  "brand_names": [
+    "Lisinopril and Hydrochlorothiazide"
+  ],
+  "manufacturer_names": [
+    "ST. MARY'S MEDICAL PARK PHARMACY"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197885"
+  ],
+  "spl_id": "00b256d4-1691-cc3b-e063-6294a90a47ec",
+  "spl_set_id": "00b266d9-ac4a-e931-e063-6294a90a6a0b",
+  "effective_time": "20230629",
+  "fetched_at": "2026-05-02T20:48:37.223934Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

@@ -1,0 +1,26 @@
+{
+  "drug_query": "aspirin",
+  "generic_names": [
+    "ASPIRIN"
+  ],
+  "brand_names": [
+    "Low Dose Aspirin"
+  ],
+  "manufacturer_names": [
+    "P & L Development, LLC"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "308416"
+  ],
+  "spl_id": "008ee85b-5cac-45a6-a857-a828f8125175",
+  "spl_set_id": "0058175f-3474-40c3-a046-6cfaec86d84b",
+  "effective_time": "20240416",
+  "fetched_at": "2026-05-02T20:49:14.597926Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

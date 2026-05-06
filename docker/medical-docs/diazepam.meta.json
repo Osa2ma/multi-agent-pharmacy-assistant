@@ -1,0 +1,26 @@
+{
+  "drug_query": "diazepam",
+  "generic_names": [
+    "DIAZEPAM"
+  ],
+  "brand_names": [
+    "Diazepam"
+  ],
+  "manufacturer_names": [
+    "A-S Medication Solutions"
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "197590"
+  ],
+  "spl_id": "842dfa9a-8c93-4c77-8f6b-95dd175df191",
+  "spl_set_id": "01f04ee4-fff9-499a-8213-984e16368084",
+  "effective_time": "20251027",
+  "fetched_at": "2026-05-02T20:51:11.337060Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

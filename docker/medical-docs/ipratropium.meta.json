@@ -1,0 +1,26 @@
+{
+  "drug_query": "ipratropium",
+  "generic_names": [
+    "IPRATROPIUM BROMIDE"
+  ],
+  "brand_names": [
+    "Ipratropium Bromide"
+  ],
+  "manufacturer_names": [
+    "Hikma Pharmaceuticals USA Inc."
+  ],
+  "product_type": [
+    "HUMAN PRESCRIPTION DRUG"
+  ],
+  "route": [
+    "NASAL"
+  ],
+  "rxcui": [
+    "1797833"
+  ],
+  "spl_id": "c8dbb0db-5c00-4205-a765-d664117c4398",
+  "spl_set_id": "05c56190-e346-4674-a4f8-049ce632ce2d",
+  "effective_time": "20220701",
+  "fetched_at": "2026-05-02T20:50:45.530686Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

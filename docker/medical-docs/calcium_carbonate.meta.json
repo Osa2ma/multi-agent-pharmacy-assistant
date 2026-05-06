@@ -1,0 +1,26 @@
+{
+  "drug_query": "calcium carbonate",
+  "generic_names": [
+    "CALCIUM CARBONATE"
+  ],
+  "brand_names": [
+    "ANTACID"
+  ],
+  "manufacturer_names": [
+    "Advance Pharmaceutical Inc."
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "577040"
+  ],
+  "spl_id": "60f41580-e08d-faad-e053-2a91aa0a9076",
+  "spl_set_id": "0108b97f-02e9-4f86-9f33-cde4f919affd",
+  "effective_time": "20171222",
+  "fetched_at": "2026-05-02T20:52:06.553442Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

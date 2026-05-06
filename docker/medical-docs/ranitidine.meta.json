@@ -1,0 +1,26 @@
+{
+  "drug_query": "ranitidine",
+  "generic_names": [
+    "RANITIDINE"
+  ],
+  "brand_names": [
+    "Ranitidine"
+  ],
+  "manufacturer_names": [
+    "Dr. Reddy's Laboratories Limited"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "198191"
+  ],
+  "spl_id": "c47f1d10-c4d9-5df4-84e8-55956b47568b",
+  "spl_set_id": "00df8a42-296f-80dd-98af-ee8b30eb38cc",
+  "effective_time": "20250523",
+  "fetched_at": "2026-05-02T20:50:19.073841Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}

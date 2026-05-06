@@ -1,0 +1,27 @@
+{
+  "drug_query": "cetirizine",
+  "generic_names": [
+    "CETIRIZINE HYDROCHLORIDE"
+  ],
+  "brand_names": [
+    "Childrens Zyrtec"
+  ],
+  "manufacturer_names": [
+    "Kenvue Brands LLC"
+  ],
+  "product_type": [
+    "HUMAN OTC DRUG"
+  ],
+  "route": [
+    "ORAL"
+  ],
+  "rxcui": [
+    "2558501",
+    "2558503"
+  ],
+  "spl_id": "322eb217-089d-e92d-e063-6394a90a6566",
+  "spl_set_id": "013ce40e-37c9-4b84-b530-ed895f60ce0e",
+  "effective_time": "20250407",
+  "fetched_at": "2026-05-02T20:50:48.464820Z",
+  "source": "OpenFDA - api.fda.gov/drug/label.json"
+}
